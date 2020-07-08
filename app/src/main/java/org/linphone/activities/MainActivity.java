@@ -93,7 +93,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
     private TextView mTopBarTitle;
     private LinearLayout mTabBar;
     protected ImageView imgDialer, imgChat, imgContacts, imgHistory;
-
+//
     private SideMenuFragment mSideMenuFragment;
     private StatusBarFragment mStatusBarFragment;
 
