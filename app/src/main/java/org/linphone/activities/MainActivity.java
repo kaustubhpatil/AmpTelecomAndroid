@@ -82,7 +82,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
     private static final int MAIN_PERMISSIONS = 1;
     protected static final int FRAGMENT_SPECIFIC_PERMISSION = 2;
 
-//
+    //
     private TextView mMissedCalls;
     private TextView mMissedMessages;
     protected View mContactsSelected;
@@ -93,7 +93,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
     private TextView mTopBarTitle;
     private LinearLayout mTabBar;
     protected ImageView imgDialer, imgChat, imgContacts, imgHistory;
-//
+    //
     private SideMenuFragment mSideMenuFragment;
     private StatusBarFragment mStatusBarFragment;
 
@@ -303,16 +303,16 @@ public abstract class MainActivity extends LinphoneGenericActivity
         }
 
         imgContacts.setColorFilter(
-                ContextCompat.getColor(this, R.color.primary_dark_color),
+                ContextCompat.getColor(this, R.color.dark_theme_color),
                 android.graphics.PorterDuff.Mode.SRC_IN);
         imgDialer.setColorFilter(
-                ContextCompat.getColor(this, R.color.primary_dark_color),
+                ContextCompat.getColor(this, R.color.dark_theme_color),
                 android.graphics.PorterDuff.Mode.SRC_IN);
         imgChat.setColorFilter(
-                ContextCompat.getColor(this, R.color.primary_dark_color),
+                ContextCompat.getColor(this, R.color.dark_theme_color),
                 android.graphics.PorterDuff.Mode.SRC_IN);
         imgHistory.setColorFilter(
-                ContextCompat.getColor(this, R.color.primary_dark_color),
+                ContextCompat.getColor(this, R.color.dark_theme_color),
                 android.graphics.PorterDuff.Mode.SRC_IN);
 
         mHistorySelected.setVisibility(View.GONE);

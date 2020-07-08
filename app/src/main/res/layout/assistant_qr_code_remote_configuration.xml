@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="?attr/backgroundColor">
 
@@ -17,24 +18,41 @@
         android:id="@+id/top_bar"
         layout="@layout/assistant_topbar" />
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black_color">
 
-        <TextureView
-            android:id="@+id/qr_code_capture_texture"
+        <com.budiyev.android.codescanner.CodeScannerView
+            android:id="@+id/scanner_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerInParent="true"/>
+            app:autoFocusButtonColor="@android:color/white"
+            app:autoFocusButtonVisible="true"
+            app:flashButtonColor="@android:color/white"
+            app:flashButtonVisible="true"
+            app:frameColor="@android:color/white"
+            app:frameCornersSize="50dp"
+            app:frameCornersRadius="0dp"
+            app:frameAspectRatioWidth="1"
+            app:frameAspectRatioHeight="1"
+            app:frameSize="0.75"
+            app:frameThickness="2dp"
+            app:maskColor="#77000000"/>
 
-        <ImageView
-            android:id="@+id/qr_code_capture_change_camera"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="5dp"
-            android:src="@drawable/switch_camera"/>
+<!--        <TextureView-->
+<!--            android:id="@+id/qr_code_capture_texture"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_centerInParent="true"/>-->
 
-    </RelativeLayout>
+<!--        <ImageView-->
+<!--            android:id="@+id/qr_code_capture_change_camera"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_margin="5dp"-->
+<!--            android:src="@drawable/switch_camera"/>-->
+
+    </FrameLayout>
 
 </LinearLayout>
