@@ -82,6 +82,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
     private static final int MAIN_PERMISSIONS = 1;
     protected static final int FRAGMENT_SPECIFIC_PERMISSION = 2;
 
+//
     private TextView mMissedCalls;
     private TextView mMissedMessages;
     protected View mContactsSelected;
