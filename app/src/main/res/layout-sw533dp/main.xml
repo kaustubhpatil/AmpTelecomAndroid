@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/status_fragment"
-        android:name="org.linphone.fragments.StatusBarFragment"
+        android:name="com.amptelecom.android.app.fragments.StatusBarFragment"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         tools:layout="@layout/status_bar" />
@@ -235,7 +235,7 @@
 
             <fragment
                 android:id="@+id/side_menu_fragment"
-                android:name="org.linphone.menu.SideMenuFragment"
+                android:name="com.amptelecom.android.app.menu.SideMenuFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:layout="@layout/side_menu" />

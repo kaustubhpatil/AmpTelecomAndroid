@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 static def getPackageName() {
-    return "org.linphone"
+    return "com.amptelecom.android.app"
 }
 
 static def firebaseEnabled() {
@@ -129,7 +129,7 @@ android {
             }
         }
         debug {
-            applicationIdSuffix ".debug"
+//            applicationIdSuffix ".debug"
             debuggable true
             jniDebuggable true
 
