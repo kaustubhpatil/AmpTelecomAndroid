@@ -12,7 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:background="@color/dark_grey_color"
+            android:background="@color/white_color"
             android:baselineAligned="false"
             android:columnCount="2"
             android:padding="20dp">
@@ -47,6 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:visibility="gone"
                     android:text="@string/app_description" />
             </LinearLayout>
 
@@ -59,7 +60,7 @@
 
                 <TextView
                     android:id="@+id/about_android_version"
-                    style="@style/about_version_font"
+                    style="@style/about_license_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
@@ -71,6 +72,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
+                    android:visibility="gone"
                     android:text="@string/about_liblinphone_sdk_version" />
 
             </LinearLayout>
@@ -82,7 +84,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="?attr/backgroundColor"
+            android:background="@color/white_color"
             android:orientation="vertical"
             android:padding="10dp">
 

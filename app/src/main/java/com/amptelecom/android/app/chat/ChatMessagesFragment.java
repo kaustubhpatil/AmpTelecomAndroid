@@ -538,7 +538,7 @@ public class ChatMessagesFragment extends Fragment
         if (item.getItemId() == R.id.resend) {
             ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter())
                     .removeItem(mContextMenuMessagePosition);
-            message.resend();
+            //            message.resend();
             return true;
         }
         if (item.getItemId() == R.id.imdn_infos) {

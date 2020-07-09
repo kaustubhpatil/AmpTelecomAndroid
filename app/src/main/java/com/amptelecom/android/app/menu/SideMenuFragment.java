@@ -74,12 +74,12 @@ public class SideMenuFragment extends Fragment {
                             getResources().getString(R.string.menu_logout),
                             R.drawable.quit_default));
         }
-        if (!getResources().getBoolean(R.bool.hide_assistant_from_side_menu)) {
-            sideMenuItems.add(
-                    new SideMenuItem(
-                            getResources().getString(R.string.menu_assistant),
-                            R.drawable.menu_assistant));
-        }
+        //        if (!getResources().getBoolean(R.bool.hide_assistant_from_side_menu)) {
+        //            sideMenuItems.add(
+        //                    new SideMenuItem(
+        //                            getResources().getString(R.string.menu_assistant),
+        //                            R.drawable.menu_assistant));
+        //        }
         if (!getResources().getBoolean(R.bool.hide_settings_from_side_menu)) {
             sideMenuItems.add(
                     new SideMenuItem(

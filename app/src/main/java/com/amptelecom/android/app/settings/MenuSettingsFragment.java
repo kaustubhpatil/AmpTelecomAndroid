@@ -198,9 +198,9 @@ public class MenuSettingsFragment extends SettingsFragment {
                 account.setTitle(
                         LinphoneUtils.getDisplayableAddress(proxyConfig.getIdentityAddress()));
 
-                if (proxyConfig.equals(core.getDefaultProxyConfig())) {
-                    account.setSubtitle(getString(R.string.default_account_flag));
-                }
+                //                if (proxyConfig.equals(core.getDefaultProxyConfig())) {
+                //                    account.setSubtitle(getString(R.string.default_account_flag));
+                //                }
 
                 switch (proxyConfig.getState()) {
                     case Ok:

@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             linphone:hint="@string/pref_image_sharing_server_title"
+            android:visibility="gone"
             linphone:subtitle="@string/pref_image_sharing_server_desc"
             linphone:title="@string/pref_image_sharing_server_title" />
 
@@ -64,6 +65,7 @@
             android:id="@+id/pref_android_app_enable_ephemeral_messages_beta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             linphone:title="@string/pref_android_app_enable_ephemeral_messages_beta" />
 
     </LinearLayout>

@@ -248,8 +248,12 @@ public class AudioSettingsFragment extends SettingsFragment {
                                 pt.enable(newValue);
                             }
                         });
-
-                mAudioCodecs.addView(codec);
+                if (pt.getMimeType().equalsIgnoreCase("pcmu")
+                        || pt.getMimeType().equalsIgnoreCase("pcma")
+                        || pt.getMimeType().equalsIgnoreCase("g722")
+                        || pt.getMimeType().equalsIgnoreCase("gsm")) {
+                    mAudioCodecs.addView(codec);
+                }
             }
         }
     }
