@@ -22,8 +22,6 @@ package com.amptelecom.android.app.settings;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import androidx.appcompat.app.AppCompatDelegate;
 import com.amptelecom.android.app.LinphoneContext;
 import com.amptelecom.android.app.LinphoneManager;
 import com.amptelecom.android.app.R;
@@ -828,7 +826,7 @@ public class LinphonePreferences {
 
     public boolean isAutoStartEnabled() {
         if (getConfig() == null) return false;
-        return getConfig().getBool("app", "auto_start", false);
+        return getConfig().getBool("app", "auto_start", true);
     }
 
     public void setAutoStart(boolean autoStartEnabled) {
@@ -1224,19 +1222,7 @@ public class LinphonePreferences {
     public boolean isDarkModeEnabled() {
         if (getConfig() == null) return false;
         if (!mContext.getResources().getBoolean(R.bool.allow_dark_mode)) return false;
-
-        boolean useNightModeDefault =
-                AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES;
-        if (mContext != null) {
-            int nightMode =
-                    mContext.getResources().getConfiguration().uiMode
-                            & Configuration.UI_MODE_NIGHT_MASK;
-            if (nightMode == Configuration.UI_MODE_NIGHT_YES) {
-                useNightModeDefault = true;
-            }
-        }
-
-        return getConfig().getBool("app", "dark_mode", useNightModeDefault);
+        return getConfig().getBool("app", "dark_mode", false);
     }
 
     public void enableDarkMode(boolean enable) {
