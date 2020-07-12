@@ -169,7 +169,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android:flexbox:1.1.0'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
-    implementation "org.linphone:linphone-sdk-android:4.5+"
+    implementation "org.linphone:linphone-sdk-android:4.4+"
     implementation 'com.budiyev.android:code-scanner:2.1.0'
 //    implementation "com.github.blikoon:QRCodeScanner:0.1.2"
 }
