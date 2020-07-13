@@ -42,7 +42,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import com.amptelecom.android.app.LinphoneContext;
 import com.amptelecom.android.app.LinphoneManager;
@@ -301,19 +300,11 @@ public abstract class MainActivity extends LinphoneGenericActivity
                                 .getBoolean(R.bool.hide_bottom_bar_on_second_level_views))) {
             showTabBar();
         }
-
-        imgContacts.setColorFilter(
-                ContextCompat.getColor(this, R.color.dark_theme_color),
-                android.graphics.PorterDuff.Mode.SRC_IN);
-        imgDialer.setColorFilter(
-                ContextCompat.getColor(this, R.color.dark_theme_color),
-                android.graphics.PorterDuff.Mode.SRC_IN);
-        imgChat.setColorFilter(
-                ContextCompat.getColor(this, R.color.dark_theme_color),
-                android.graphics.PorterDuff.Mode.SRC_IN);
-        imgHistory.setColorFilter(
-                ContextCompat.getColor(this, R.color.dark_theme_color),
-                android.graphics.PorterDuff.Mode.SRC_IN);
+        int clr = R.attr.tabUnselect;
+        imgContacts.setColorFilter(clr, android.graphics.PorterDuff.Mode.SRC_IN);
+        imgDialer.setColorFilter(clr, android.graphics.PorterDuff.Mode.SRC_IN);
+        imgChat.setColorFilter(clr, android.graphics.PorterDuff.Mode.SRC_IN);
+        imgHistory.setColorFilter(clr, android.graphics.PorterDuff.Mode.SRC_IN);
 
         mHistorySelected.setVisibility(View.GONE);
         mContactsSelected.setVisibility(View.GONE);

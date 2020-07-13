@@ -24,8 +24,13 @@
         <attr name="lighToolbarTextColor" format="color"/>
         <attr name="darkToolbarBackgroundColor" format="color"/>
         <attr name="darkToolbarTextColor" format="color"/>
+        <attr name="colorAccent" format="color"/>
+        <attr name="tabUnselect" format="color"/>
+        <attr name="settingCat" format="color"/>
 
         <attr name="button_background_drawable" format="reference" />
+        <attr name="call" format="reference" />
+        <attr name="footer_button" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="Settings">

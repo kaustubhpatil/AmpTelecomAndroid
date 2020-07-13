@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -110,10 +111,27 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
                                 new Runnable() {
                                     @Override
                                     public void run() {
-                                        Intent resultIntent = new Intent();
-                                        resultIntent.putExtra("URL", result.getText());
-                                        setResult(Activity.RESULT_OK, resultIntent);
-                                        finish();
+//                                        QrCodeConfigurationAssistantActivity.this.runOnUiThread(
+//                                                new Runnable() {
+//                                                    @Override
+//                                                    public void run() {
+//                                                        Toast.makeText(
+//                                                                        QrCodeConfigurationAssistantActivity
+//                                                                                .this,
+//                                                                        result.getText(),
+//                                                                        Toast.LENGTH_LONG)
+//                                                                .show();
+//                                                    }
+//                                                });
+                                        //
+                                        // Toast.makeText(QrCodeConfigurationAssistantActivity.this,"D"+result.getText())
+                                                                                Intent
+                                         resultIntent = new Intent();
+
+                                         resultIntent.putExtra("URL", result.getText());
+
+                                         setResult(Activity.RESULT_OK, resultIntent);
+                                                                                finish();
                                     }
                                 });
                     }

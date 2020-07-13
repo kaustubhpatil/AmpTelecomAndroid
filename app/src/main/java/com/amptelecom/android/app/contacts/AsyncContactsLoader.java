@@ -24,9 +24,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
+import android.widget.Toast;
 import com.amptelecom.android.app.LinphoneManager;
 import com.amptelecom.android.app.R;
 import com.amptelecom.android.app.compatibility.Compatibility;
+import com.amptelecom.android.app.network.ApiService;
+import com.amptelecom.android.app.network.RetrofitClientInstance;
+import com.amptelecom.android.app.network.model.Contacts;
 import com.amptelecom.android.app.settings.LinphonePreferences;
 import com.amptelecom.android.app.utils.LinphoneUtils;
 import java.util.ArrayList;
@@ -38,6 +42,9 @@ import org.linphone.core.Core;
 import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
 import org.linphone.core.tools.Log;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.AsyncContactsData> {
     @SuppressLint("InlinedApi")
@@ -255,6 +262,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
 
     @Override
     protected void onPostExecute(AsyncContactsData data) {
+        dataContacts = data;
         Log.i(
                 "[Contacts Manager] "
                         + data.contacts.size()
@@ -262,7 +270,13 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                         + data.sipContacts.size()
                         + " are SIP");
 
-        for (LinphoneContact contact : data.contacts) {
+        fetchContacts();
+    }
+
+    private AsyncContactsData dataContacts;
+
+    private void postExecution() {
+        for (LinphoneContact contact : dataContacts.contacts) {
             contact.createOrUpdateFriendFromNativeContact();
         }
 
@@ -276,8 +290,8 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
             }
         }
 
-        ContactsManager.getInstance().setContacts(data.contacts);
-        ContactsManager.getInstance().setSipContacts(data.sipContacts);
+        ContactsManager.getInstance().setContacts(dataContacts.contacts);
+        ContactsManager.getInstance().setSipContacts(dataContacts.sipContacts);
 
         for (ContactsUpdatedListener listener :
                 ContactsManager.getInstance().getContactsListeners()) {
@@ -286,6 +300,31 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
 
         Compatibility.createChatShortcuts(mContext);
         Log.i("[Contacts Manager] Synchronization finished");
+    }
+
+    private void fetchContacts() {
+        ApiService service = RetrofitClientInstance.getRetrofitInstance().create(ApiService.class);
+        Call<List<Contacts>> call =
+                service.getContacts(
+                        "1002",
+                        "aaa.amptele.com",
+                        "W^hat3v3r",
+                        "E697A70D-73F5-4600-A2E0-A6B5069793C9");
+        call.enqueue(
+                new Callback<List<Contacts>>() {
+                    @SuppressWarnings("NullableProblems")
+                    @Override
+                    public void onResponse(
+                            Call<List<Contacts>> call, Response<List<Contacts>> response) {
+                        Toast.makeText(mContext, "hi", Toast.LENGTH_SHORT).show();
+                        postExecution();
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Contacts>> call, Throwable t) {
+                        Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     class AsyncContactsData {

@@ -10,7 +10,7 @@ import retrofit2.http.POST;
 public interface ApiService {
 
     @FormUrlEncoded
-    @POST("/smartphone2/getContacts")
+    @POST("smartphone2/getContacts/")
     Call<List<Contacts>> getContacts(
             @Field("extension") String extension,
             @Field("realm") String host,

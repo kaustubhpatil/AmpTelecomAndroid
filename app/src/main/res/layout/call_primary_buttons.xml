@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/right_vertical_divider"
-            android:background="@drawable/footer_button">
+            android:background="?attr/footer_button">
 
             <ImageView
                 android:id="@+id/chat"

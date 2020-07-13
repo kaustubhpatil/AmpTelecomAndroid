@@ -35,7 +35,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.2"
-                    android:background="?attr/button_background_drawable"
+                    android:tint="@color/white_color"
                     android:contentDescription="@string/content_description_dialer_back"
                     android:padding="18dp"
                     android:src="@drawable/back" />
@@ -78,7 +78,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/footer_button">
+                    android:background="?attr/footer_button">
 
                     <ImageView
                         android:id="@+id/imgHistory"
@@ -94,7 +94,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/dark_theme_color"
+                        android:background="?attr/tabUnselect"
                         android:visibility="gone" />
 
                     <TextView
@@ -114,7 +114,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/footer_button">
+                    android:background="?attr/footer_button">
 
                     <ImageView
                         android:id="@+id/imgContacts"
@@ -130,7 +130,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/dark_theme_color"
+                        android:background="?attr/tabUnselect"
                         android:visibility="gone" />
                 </RelativeLayout>
 
@@ -139,7 +139,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/footer_button">
+                    android:background="?attr/footer_button">
 
                     <ImageView
                         android:id="@+id/imgDialer"
@@ -155,7 +155,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/dark_theme_color" />
+                        android:background="?attr/tabUnselect" />
 
                 </RelativeLayout>
 
@@ -164,7 +164,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/footer_button">
+                    android:background="?attr/footer_button">
 
                     <ImageView
                         android:id="@+id/imgChat"
@@ -180,7 +180,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/dark_theme_color"
+                        android:background="?attr/tabUnselect"
                         android:visibility="gone" />
 
                     <TextView
