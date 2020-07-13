@@ -20,21 +20,32 @@
 package com.amptelecom.android.app.assistant;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Intent;
+import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import com.amptelecom.android.app.LinphoneManager;
 import com.amptelecom.android.app.R;
+import com.amptelecom.android.app.network.ApiService;
+import com.amptelecom.android.app.network.RetrofitClientInstance;
+import com.amptelecom.android.app.network.model.LoginData;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.zxing.Result;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import org.linphone.core.AccountCreator;
+import org.linphone.core.Core;
+import org.linphone.core.TransportType;
 import org.linphone.core.tools.Log;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
     //    private TextureView mQrcodeView;
@@ -111,27 +122,40 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
                                 new Runnable() {
                                     @Override
                                     public void run() {
-//                                        QrCodeConfigurationAssistantActivity.this.runOnUiThread(
-//                                                new Runnable() {
-//                                                    @Override
-//                                                    public void run() {
-//                                                        Toast.makeText(
-//                                                                        QrCodeConfigurationAssistantActivity
-//                                                                                .this,
-//                                                                        result.getText(),
-//                                                                        Toast.LENGTH_LONG)
-//                                                                .show();
-//                                                    }
-//                                                });
+                                        //
+                                        // QrCodeConfigurationAssistantActivity.this.runOnUiThread(
+                                        //                                                new
+                                        // Runnable() {
+                                        //
+                                        // @Override
+                                        //                                                    public
+                                        // void run() {
+                                        //
+                                        // Toast.makeText(
+                                        //
+                                        //              QrCodeConfigurationAssistantActivity
+                                        //
+                                        //                      .this,
+                                        //
+                                        //              result.getText(),
+                                        //
+                                        //              Toast.LENGTH_LONG)
+                                        //
+                                        //      .show();
+                                        //                                                    }
+                                        //                                                });
                                         //
                                         // Toast.makeText(QrCodeConfigurationAssistantActivity.this,"D"+result.getText())
-                                                                                Intent
-                                         resultIntent = new Intent();
-
-                                         resultIntent.putExtra("URL", result.getText());
-
-                                         setResult(Activity.RESULT_OK, resultIntent);
-                                                                                finish();
+                                        //                                        Intent
+                                        // resultIntent = new Intent();
+                                        //
+                                        //
+                                        // resultIntent.putExtra("URL", result.getText());
+                                        //
+                                        //
+                                        // setResult(Activity.RESULT_OK, resultIntent);
+                                        //                                        finish();
+                                        fetchLoginDetails(result.getText());
                                     }
                                 });
                     }
@@ -144,6 +168,69 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
                     }
                 });
         mCodeScanner.startPreview();
+    }
+
+    ProgressDialog progressDialog;
+
+    private void fetchLoginDetails(final String url) {
+        progressDialog =
+                new ProgressDialog(
+                        QrCodeConfigurationAssistantActivity.this, ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("Please wait...");
+        progressDialog.show();
+        ApiService service = RetrofitClientInstance.getRetrofitInstance().create(ApiService.class);
+        service.getLoginDetails(url)
+                .enqueue(
+                        new Callback<List<LoginData>>() {
+                            @Override
+                            public void onResponse(
+                                    Call<List<LoginData>> call,
+                                    Response<List<LoginData>> response) {
+                                if (response != null
+                                        && response.body() != null
+                                        && response.body().size() > 0) {
+                                    LoginData loginData = response.body().get(0);
+                                    login(loginData.username, md5(loginData.ha1), loginData.domain);
+                                } else {
+                                    finish();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<List<LoginData>> call, Throwable t) {
+                                progressDialog.dismiss();
+                                finish();
+                            }
+                        });
+    }
+
+    private void login(final String username, final String password, final String domain) {
+
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            Log.i("[Generic Connection Assistant] Reloading configuration with default");
+            reloadDefaultAccountCreatorConfig();
+        }
+
+        AccountCreator accountCreator = getAccountCreator();
+        accountCreator.setUsername(username);
+        accountCreator.setDomain(domain);
+        accountCreator.setPassword(password);
+        accountCreator.setDisplayName("");
+
+        //            switch (mTransport.getCheckedRadioButtonId()) {
+        //                case R.id.transport_udp:
+        //                    accountCreator.setTransport(TransportType.Udp);
+        //                    break;
+        //                case R.id.transport_tcp:
+        //                    accountCreator.setTransport(TransportType.Tcp);
+        //                    break;
+        //                case R.id.transport_tls:
+        accountCreator.setTransport(TransportType.Tls);
+        //                    break;
+        //            }
+        progressDialog.dismiss();
+        createProxyConfigAndLeaveAssistant(true);
     }
 
     private boolean checkPermission(String permission) {
@@ -221,4 +308,26 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
     //        core.setVideoDevice(firstDevice);
     //    }
 
+    public static String md5(final String s) {
+        final String MD5 = "MD5";
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest.getInstance(MD5);
+            digest.update(s.getBytes());
+            byte messageDigest[] = digest.digest();
+
+            // Create Hex String
+            StringBuilder hexString = new StringBuilder();
+            for (byte aMessageDigest : messageDigest) {
+                String h = Integer.toHexString(0xFF & aMessageDigest);
+                while (h.length() < 2) h = "0" + h;
+                hexString.append(h);
+            }
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 }

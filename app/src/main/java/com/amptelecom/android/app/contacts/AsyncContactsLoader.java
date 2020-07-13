@@ -30,6 +30,7 @@ import com.amptelecom.android.app.R;
 import com.amptelecom.android.app.compatibility.Compatibility;
 import com.amptelecom.android.app.network.ApiService;
 import com.amptelecom.android.app.network.RetrofitClientInstance;
+import com.amptelecom.android.app.network.model.ContactEntries;
 import com.amptelecom.android.app.network.model.Contacts;
 import com.amptelecom.android.app.settings.LinphonePreferences;
 import com.amptelecom.android.app.utils.LinphoneUtils;
@@ -275,7 +276,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
 
     private AsyncContactsData dataContacts;
 
-    private void postExecution() {
+    private void postExecution(List<Contacts> serverContactlist) {
         for (LinphoneContact contact : dataContacts.contacts) {
             contact.createOrUpdateFriendFromNativeContact();
         }
@@ -287,6 +288,24 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
             FriendList[] friendLists = LinphoneManager.getCore().getFriendsLists();
             for (FriendList list : friendLists) {
                 list.updateSubscriptions();
+            }
+        }
+
+        if (serverContactlist != null && serverContactlist.size() > 0) {
+            for (int i = 0; i < serverContactlist.size(); i++) {
+                Contacts contacts = serverContactlist.get(i);
+                LinphoneContact linphoneContact = new LinphoneContact();
+                linphoneContact.setFirstNameAndLastName(
+                        contacts.getFname(), contacts.getLname(), false);
+                linphoneContact.setFullName(contacts.getDisplayName());
+                List<ContactEntries> listCe = contacts.getContactEntries();
+                for (int j = 0; j < listCe.size(); j++) {
+                    ContactEntries contactEntries = listCe.get(j);
+                    LinphoneNumberOrAddress linphoneNumberOrAddress =
+                            new LinphoneNumberOrAddress(contactEntries.uri, contactEntries.uri);
+                    linphoneContact.getNumbersOrAddresses().add(linphoneNumberOrAddress);
+                }
+                dataContacts.contacts.add(linphoneContact);
             }
         }
 
@@ -304,24 +323,24 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
 
     private void fetchContacts() {
         ApiService service = RetrofitClientInstance.getRetrofitInstance().create(ApiService.class);
-        Call<List<Contacts>> call =
+        Call<ContactReponse> call =
                 service.getContacts(
-                        "1002",
+                        "1000",
                         "aaa.amptele.com",
-                        "W^hat3v3r",
+                        "We!6Auc%?",
                         "E697A70D-73F5-4600-A2E0-A6B5069793C9");
         call.enqueue(
-                new Callback<List<Contacts>>() {
+                new Callback<ContactReponse>() {
                     @SuppressWarnings("NullableProblems")
                     @Override
                     public void onResponse(
-                            Call<List<Contacts>> call, Response<List<Contacts>> response) {
-                        Toast.makeText(mContext, "hi", Toast.LENGTH_SHORT).show();
-                        postExecution();
+                            Call<ContactReponse> call, Response<ContactReponse> response) {
+
+                        postExecution(response.body().getContactEntries());
                     }
 
                     @Override
-                    public void onFailure(Call<List<Contacts>> call, Throwable t) {
+                    public void onFailure(Call<ContactReponse> call, Throwable t) {
                         Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });

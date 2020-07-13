@@ -176,7 +176,7 @@ public class ContactsFragment extends Fragment
         dividerItemDecoration.setDrawable(
                 getActivity().getResources().getDrawable(R.drawable.divider));
         mContactsList.addItemDecoration(dividerItemDecoration);
-
+        ContactsManager.getInstance().fetchContactsAsync();
         return view;
     }
 
