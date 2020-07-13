@@ -158,6 +158,11 @@ android {
         pickFirst 'META-INF/LICENSE'
         exclude 'META-INF/MANIFEST.MF'
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -172,6 +177,11 @@ dependencies {
     implementation "org.linphone:linphone-sdk-android:4.4+"
     implementation 'com.budiyev.android:code-scanner:2.1.0'
 //    implementation "com.github.blikoon:QRCodeScanner:0.1.2"
+
+    //Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.7.0'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.7.0'
 }
 if (firebaseEnabled()) {
     apply plugin: 'com.google.gms.google-services'
