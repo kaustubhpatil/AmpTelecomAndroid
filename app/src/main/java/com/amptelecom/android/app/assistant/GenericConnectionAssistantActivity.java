@@ -114,6 +114,7 @@ public class GenericConnectionAssistantActivity extends AssistantActivity implem
         createProxyConfigAndLeaveAssistant(true);
     }
 
+
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
