@@ -11,6 +11,7 @@
     <string name="notification_register_failure">%s failed to connect</string>
     <string name="tunnel_host"></string>
     <string name="about_version">AmpTelecom Android %s</string>
+    <string name="about_des">Amp Telecom for Android</string>
     <string name="about_liblinphone_version">AmpTelecom Core %s</string>
     <string name="about_liblinphone_sdk_version">AmpTelecom SDK %s</string>
     <string name="about_privacy_policy">Visit our privacy policy</string>

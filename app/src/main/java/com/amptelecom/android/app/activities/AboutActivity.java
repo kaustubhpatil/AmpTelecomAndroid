@@ -74,12 +74,17 @@ public class AboutActivity extends MainActivity {
                                 + ")"));
         // We can't access a library's BuildConfig, so we have to set it as a resource
         aboutVersion.setText(
-                String.format(
-                        getString(R.string.about_version),
-                        com.amptelecom.android.app.BuildConfig.VERSION_NAME
-                                + " ("
-                                + com.amptelecom.android.app.BuildConfig.BUILD_TYPE
-                                + ")"));
+                getString(R.string.about_des)
+                        + "\n"
+                        + "Release "
+                        + com.amptelecom.android.app.BuildConfig.VERSION_NAME);
+        //        aboutVersion.setText(
+        //                String.format(
+        //                        getString(R.string.about_des),
+        //                        com.amptelecom.android.app.BuildConfig.VERSION_NAME
+        //                                + " ("
+        //                                + com.amptelecom.android.app.BuildConfig.BUILD_TYPE
+        //                                + ")"));
 
         TextView privacyPolicy = findViewById(R.id.privacy_policy_link);
         privacyPolicy.setOnClickListener(

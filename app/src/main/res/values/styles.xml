@@ -361,7 +361,7 @@
     </style>
 
     <style name="accent_colored_title_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/accentColor</item>
+        <item name="android:textColor">@color/white_color</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">24sp</item>
@@ -388,7 +388,7 @@
     </style>
 
     <style name="toolbar_small_title_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textColor">@color/white_color</item>
         <item name="android:textSize">18sp</item>
     </style>
 

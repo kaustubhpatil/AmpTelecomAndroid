@@ -30,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:layout_alignParentBottom="true"
-                android:background="?attr/accentColor" />
+                android:background="@color/light_grey_color" />
 
         </RelativeLayout>
 
@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:layout_alignParentBottom="true"
-                android:background="?attr/accentColor"
+                android:background="@color/light_grey_color"
                 android:visibility="gone" />
         </RelativeLayout>
 
