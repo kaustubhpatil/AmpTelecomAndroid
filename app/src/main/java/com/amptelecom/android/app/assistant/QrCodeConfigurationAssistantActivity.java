@@ -32,6 +32,7 @@ import com.amptelecom.android.app.R;
 import com.amptelecom.android.app.network.ApiService;
 import com.amptelecom.android.app.network.RetrofitClientInstance;
 import com.amptelecom.android.app.network.model.LoginData;
+import com.amptelecom.android.app.settings.LinphonePreferences;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
@@ -190,7 +191,10 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
                                         && response.body() != null
                                         && response.body().size() > 0) {
                                     LoginData loginData = response.body().get(0);
-                                    login(loginData.username, md5(loginData.ha1), loginData.domain);
+                                    LinphonePreferences.instance().setUsername(loginData.username);
+                                    LinphonePreferences.instance().setDomain(loginData.domain);
+                                    LinphonePreferences.instance().setPassword(loginData.password);
+                                    login(loginData.username, loginData.password, loginData.domain);
                                 } else {
                                     finish();
                                 }

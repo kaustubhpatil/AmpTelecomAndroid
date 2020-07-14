@@ -1310,4 +1310,28 @@ public class LinphonePreferences {
         if (getConfig() == null) return true;
         return getConfig().getBool("app", "ephemeral", false);
     }
+
+    public String getUsername() {
+        return getConfig().getString("app", "username", null);
+    }
+
+    public void setUsername(String username) {
+        getConfig().setString("app", "username", username);
+    }
+
+    public String getDomain() {
+        return getConfig().getString("app", "domain", null);
+    }
+
+    public void setDomain(String domain) {
+        getConfig().setString("app", "domain", domain);
+    }
+
+    public String getPassword() {
+        return getConfig().getString("app", "password", null);
+    }
+
+    public void setPassword(String password) {
+        getConfig().setString("app", "password", password);
+    }
 }

@@ -39,6 +39,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import org.linphone.core.Core;
 import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
@@ -325,18 +326,21 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
         ApiService service = RetrofitClientInstance.getRetrofitInstance().create(ApiService.class);
         Call<ContactReponse> call =
                 service.getContacts(
-                        "1000",
-                        "aaa.amptele.com",
-                        "We!6Auc%?",
-                        "E697A70D-73F5-4600-A2E0-A6B5069793C9");
+                        LinphonePreferences.instance().getUsername(),
+                        LinphonePreferences.instance().getDomain(),
+                        LinphonePreferences.instance().getPassword(),
+                        UUID.randomUUID().toString());
         call.enqueue(
                 new Callback<ContactReponse>() {
                     @SuppressWarnings("NullableProblems")
                     @Override
                     public void onResponse(
                             Call<ContactReponse> call, Response<ContactReponse> response) {
-
-                        postExecution(response.body().getContactEntries());
+                        if (response.body() != null) {
+                            postExecution(response.body().getContactEntries());
+                        } else {
+                            postExecution(null);
+                        }
                     }
 
                     @Override
