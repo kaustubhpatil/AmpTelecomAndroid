@@ -20,7 +20,6 @@
 package com.amptelecom.android.app.firebase;
 
 import android.widget.Toast;
-
 import com.amptelecom.android.app.LinphoneContext;
 import com.amptelecom.android.app.LinphoneManager;
 import com.amptelecom.android.app.settings.LinphonePreferences;
@@ -71,8 +70,10 @@ public class FirebaseMessaging extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         android.util.Log.i("FirebaseMessaging", "[Push Notification] Received");
         try {
-            Toast.makeText(getApplicationContext(),"Push notification received",Toast.LENGTH_LONG).show();
-        } catch (Exception e){}
+            Toast.makeText(getApplicationContext(), "Push notification received", Toast.LENGTH_LONG)
+                    .show();
+        } catch (Exception e) {
+        }
         LinphoneUtils.dispatchOnUIThread(mPushReceivedRunnable);
     }
 }

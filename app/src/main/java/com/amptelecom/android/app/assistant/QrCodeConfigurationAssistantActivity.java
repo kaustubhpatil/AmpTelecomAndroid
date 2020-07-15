@@ -20,10 +20,16 @@
 package com.amptelecom.android.app.assistant;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -33,10 +39,19 @@ import com.amptelecom.android.app.network.ApiService;
 import com.amptelecom.android.app.network.RetrofitClientInstance;
 import com.amptelecom.android.app.network.model.LoginData;
 import com.amptelecom.android.app.settings.LinphonePreferences;
+import com.amptelecom.android.app.utils.FileUtil;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.LuminanceSource;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.RGBLuminanceSource;
+import com.google.zxing.Reader;
 import com.google.zxing.Result;
+import com.google.zxing.common.HybridBinarizer;
+import java.io.File;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -61,43 +76,12 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
 
         setContentView(R.layout.assistant_qr_code_remote_configuration);
 
-        //        mQrcodeView = findViewById(R.id.qr_code_capture_texture);
-        //
-        //        mListener =
-        //                new CoreListenerStub() {
-        //                    @Override
-        //                    public void onQrcodeFound(Core core, String result) {
-        //                        Intent resultIntent = new Intent();
-        //                        resultIntent.putExtra("URL", result);
-        //                        setResult(Activity.RESULT_OK, resultIntent);
-        //                        //                        Log.e("ttt", "+" + result);
-        //                        //                        Toast.makeText(
-        //                        //
-        //                        // QrCodeConfigurationAssistantActivity.this,
-        //                        //                                        "F" + result,
-        //                        //                                        Toast.LENGTH_LONG)
-        //                        //                                .show();
-        //                        finish();
-        //                    }
-        //                };
-        //
-        //        ImageView changeCamera = findViewById(R.id.qr_code_capture_change_camera);
-        //        changeCamera.setOnClickListener(
-        //                new View.OnClickListener() {
-        //                    @Override
-        //                    public void onClick(View v) {
-        //                        LinphoneManager.getCallManager().switchCamera();
-        //                    }
-        //                });
-        //        Core core = LinphoneManager.getCore();
-        //        if (core != null && core.getVideoDevicesList().length > 1) {
-        //            changeCamera.setVisibility(View.VISIBLE);
-        //        }
-
-        if (checkPermission(Manifest.permission.CAMERA)) {
+        if (checkPermission(Manifest.permission.CAMERA)
+                && checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
             loadQrCode();
         } else {
-            checkAndRequestPermission(Manifest.permission.CAMERA, 12);
+            checkAndRequestPermission(
+                    Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, 12);
         }
     }
 
@@ -106,13 +90,14 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
             int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 12) {
-            if (checkPermission(Manifest.permission.CAMERA)) {
+            if (checkPermission(Manifest.permission.CAMERA)
+                    && checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 loadQrCode();
             }
         }
     }
 
-    private void loadQrCode() {
+    private void loadCamera() {
         CodeScannerView scannerView = findViewById(R.id.scanner_view);
         mCodeScanner = new CodeScanner(this, scannerView);
         mCodeScanner.setDecodeCallback(
@@ -123,39 +108,6 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
                                 new Runnable() {
                                     @Override
                                     public void run() {
-                                        //
-                                        // QrCodeConfigurationAssistantActivity.this.runOnUiThread(
-                                        //                                                new
-                                        // Runnable() {
-                                        //
-                                        // @Override
-                                        //                                                    public
-                                        // void run() {
-                                        //
-                                        // Toast.makeText(
-                                        //
-                                        //              QrCodeConfigurationAssistantActivity
-                                        //
-                                        //                      .this,
-                                        //
-                                        //              result.getText(),
-                                        //
-                                        //              Toast.LENGTH_LONG)
-                                        //
-                                        //      .show();
-                                        //                                                    }
-                                        //                                                });
-                                        //
-                                        // Toast.makeText(QrCodeConfigurationAssistantActivity.this,"D"+result.getText())
-                                        //                                        Intent
-                                        // resultIntent = new Intent();
-                                        //
-                                        //
-                                        // resultIntent.putExtra("URL", result.getText());
-                                        //
-                                        //
-                                        // setResult(Activity.RESULT_OK, resultIntent);
-                                        //                                        finish();
                                         fetchLoginDetails(result.getText());
                                     }
                                 });
@@ -169,6 +121,125 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
                     }
                 });
         mCodeScanner.startPreview();
+    }
+
+    private void loadQrCode2() {
+
+        new AlertDialog.Builder(this)
+                .setTitle("Something went wrong, Try again?")
+                .setPositiveButton(
+                        "Camera",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                if (mCodeScanner != null) {
+                                    mCodeScanner.startPreview();
+                                } else {
+                                    loadCamera();
+                                }
+                            }
+                        })
+                .setNegativeButton(
+                        "Gallery",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = new Intent();
+                                intent.setType("image/*");
+                                intent.setAction(Intent.ACTION_PICK);
+                                startActivityForResult(
+                                        Intent.createChooser(intent, "Choose Image"),
+                                        PICK_IMAGE_REQUEST);
+                            }
+                        })
+                .show();
+    }
+
+    private void loadQrCode() {
+
+        new AlertDialog.Builder(this)
+                .setTitle("Scan QR code using?")
+                .setPositiveButton(
+                        "Camera",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                if (mCodeScanner != null) {
+                                    mCodeScanner.startPreview();
+                                } else {
+                                    loadCamera();
+                                }
+                            }
+                        })
+                .setNegativeButton(
+                        "Gallery",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = new Intent();
+                                intent.setType("image/*");
+                                intent.setAction(Intent.ACTION_PICK);
+                                startActivityForResult(
+                                        Intent.createChooser(intent, "Choose Image"),
+                                        PICK_IMAGE_REQUEST);
+                            }
+                        })
+                .show();
+    }
+
+    private static final int PICK_IMAGE_REQUEST = 9;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK) {
+            if (data == null) {
+                Toast.makeText(
+                                QrCodeConfigurationAssistantActivity.this,
+                                "Failed to open picture!",
+                                Toast.LENGTH_SHORT)
+                        .show();
+                loadQrCode2();
+                return;
+            }
+            try {
+                File actualImage = FileUtil.from(this, data.getData());
+
+                Bitmap bMap = BitmapFactory.decodeFile(actualImage.getPath());
+                String str = "null";
+                if (bMap != null) {
+                    str = "notnull";
+                }
+                android.util.Log.i("FirebaseMessaging", str + actualImage.getAbsolutePath());
+
+                int[] intArray = new int[bMap.getWidth() * bMap.getHeight()];
+                // copy pixel data from the Bitmap into the 'intArray' array
+                bMap.getPixels(
+                        intArray, 0, bMap.getWidth(), 0, 0, bMap.getWidth(), bMap.getHeight());
+
+                LuminanceSource source =
+                        new RGBLuminanceSource(bMap.getWidth(), bMap.getHeight(), intArray);
+                BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+                try {
+                    Reader reader = new MultiFormatReader();
+                    Result result = reader.decode(bitmap);
+                    //                    android.util.Log.i("FirebaseMessaging", result.getText());
+                    fetchLoginDetails(result.getText());
+                    //                    Toast.makeText(
+                    //                                    QrCodeConfigurationAssistantActivity.this,
+                    //                                    "Data" + result.getText(),
+                    //                                    Toast.LENGTH_SHORT)
+                    //                            .show();
+
+                } catch (Exception e) {
+                    loadQrCode2();
+                }
+
+            } catch (IOException e) {
+                loadQrCode2();
+                e.printStackTrace();
+            }
+        }
     }
 
     ProgressDialog progressDialog;
@@ -196,14 +267,14 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
                                     LinphonePreferences.instance().setPassword(loginData.password);
                                     login(loginData.username, loginData.password, loginData.domain);
                                 } else {
-                                    finish();
+                                    loadQrCode2();
                                 }
                             }
 
                             @Override
                             public void onFailure(Call<List<LoginData>> call, Throwable t) {
                                 progressDialog.dismiss();
-                                finish();
+                                loadQrCode2();
                             }
                         });
     }
@@ -247,13 +318,13 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
         return granted == PackageManager.PERMISSION_GRANTED;
     }
 
-    private boolean checkAndRequestPermission(String permission, int result) {
-        if (!checkPermission(permission)) {
-            Log.i("[Permission] Asking for " + permission);
-            ActivityCompat.requestPermissions(this, new String[] {permission}, result);
-            return false;
-        }
-        return true;
+    private void checkAndRequestPermission(String permission, String permission2, int result) {
+        //        if (!checkPermission(permission)) {
+        Log.i("[Permission] Asking for " + permission);
+        ActivityCompat.requestPermissions(this, new String[] {permission, permission2}, result);
+        //            return false;
+        //        }
+        //        return true;
     }
 
     @Override
