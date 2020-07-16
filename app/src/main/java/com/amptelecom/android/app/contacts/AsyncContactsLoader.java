@@ -300,13 +300,15 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                         contacts.getFname(), contacts.getLname(), false);
                 linphoneContact.setFullName(contacts.getDisplayName());
                 List<ContactEntries> listCe = contacts.getContactEntries();
-                for (int j = 0; j < listCe.size(); j++) {
-                    ContactEntries contactEntries = listCe.get(j);
-                    LinphoneNumberOrAddress linphoneNumberOrAddress =
-                            new LinphoneNumberOrAddress(contactEntries.uri, contactEntries.uri);
-                    linphoneContact.getNumbersOrAddresses().add(linphoneNumberOrAddress);
+                if (listCe != null) {
+                    for (int j = 0; j < listCe.size(); j++) {
+                        ContactEntries contactEntries = listCe.get(j);
+                        LinphoneNumberOrAddress linphoneNumberOrAddress =
+                                new LinphoneNumberOrAddress(contactEntries.uri, contactEntries.uri);
+                        linphoneContact.getNumbersOrAddresses().add(linphoneNumberOrAddress);
+                    }
+                    dataContacts.contacts.add(linphoneContact);
                 }
-                dataContacts.contacts.add(linphoneContact);
             }
         }
 

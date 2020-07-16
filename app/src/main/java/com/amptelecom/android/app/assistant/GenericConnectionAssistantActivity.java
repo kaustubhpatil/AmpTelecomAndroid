@@ -32,6 +32,7 @@ import com.amptelecom.android.app.LinphoneManager;
 import com.amptelecom.android.app.R;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.Core;
+import org.linphone.core.ProxyConfig;
 import org.linphone.core.TransportType;
 import org.linphone.core.tools.Log;
 
@@ -45,6 +46,8 @@ public class GenericConnectionAssistantActivity extends AssistantActivity implem
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.assistant_generic_connection);
+
+        deleteExistingAccount();
 
         mLogin = findViewById(R.id.assistant_login);
         mLogin.setEnabled(false);
@@ -71,6 +74,26 @@ public class GenericConnectionAssistantActivity extends AssistantActivity implem
                         GenericConnectionAssistantActivity.this,
                         QrCodeConfigurationAssistantActivity.class);
         startActivityForResult(in, 101);
+    }
+
+    private void deleteExistingAccount() {
+        ProxyConfig proxyConfig =
+                LinphoneManager.getInstance().getAccountCreator().createProxyConfig();
+        if (proxyConfig != null && LinphoneManager.getCore() != null) {
+            LinphoneManager.getCore().removeProxyConfig(proxyConfig);
+            LinphoneManager.getCore().removeAuthInfo(proxyConfig.findAuthInfo());
+            proxyConfig.edit();
+            proxyConfig.setExpires(0);
+            proxyConfig.done();
+            LinphoneManager.getCore().refreshRegisters();
+        }
+
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            core.setDefaultProxyConfig(null);
+            core.clearAllAuthInfo();
+            core.clearProxyConfig();
+        }
     }
 
     @Override

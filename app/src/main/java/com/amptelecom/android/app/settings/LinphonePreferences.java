@@ -1334,4 +1334,12 @@ public class LinphonePreferences {
     public void setPassword(String password) {
         getConfig().setString("app", "password", password);
     }
+
+    public String getProtocol() {
+        return getConfig().getString("app", "protocol", null);
+    }
+
+    public void setProtocol(String protocol) {
+        getConfig().setString("app", "protocol", protocol);
+    }
 }

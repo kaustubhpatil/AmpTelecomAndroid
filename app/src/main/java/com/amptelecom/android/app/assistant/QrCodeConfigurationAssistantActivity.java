@@ -44,6 +44,7 @@ import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.zxing.BinaryBitmap;
+import com.google.zxing.DecodeHintType;
 import com.google.zxing.LuminanceSource;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.RGBLuminanceSource;
@@ -54,6 +55,7 @@ import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Hashtable;
 import java.util.List;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.Core;
@@ -84,6 +86,9 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
                     Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, 12);
         }
     }
+
+    @Override
+    public void onBackPressed() {}
 
     @Override
     public void onRequestPermissionsResult(
@@ -152,6 +157,7 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
                                         PICK_IMAGE_REQUEST);
                             }
                         })
+                .setCancelable(false)
                 .show();
     }
 
@@ -184,6 +190,7 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
                                         PICK_IMAGE_REQUEST);
                             }
                         })
+                .setCancelable(false)
                 .show();
     }
 
@@ -220,9 +227,14 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
                 LuminanceSource source =
                         new RGBLuminanceSource(bMap.getWidth(), bMap.getHeight(), intArray);
                 BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+                Hashtable<DecodeHintType, Object> decodeHints =
+                        new Hashtable<DecodeHintType, Object>();
+                decodeHints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
+                decodeHints.put(DecodeHintType.PURE_BARCODE, Boolean.TRUE);
+
                 try {
                     Reader reader = new MultiFormatReader();
-                    Result result = reader.decode(bitmap);
+                    Result result = reader.decode(bitmap, decodeHints);
                     //                    android.util.Log.i("FirebaseMessaging", result.getText());
                     fetchLoginDetails(result.getText());
                     //                    Toast.makeText(
@@ -265,7 +277,12 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
                                     LinphonePreferences.instance().setUsername(loginData.username);
                                     LinphonePreferences.instance().setDomain(loginData.domain);
                                     LinphonePreferences.instance().setPassword(loginData.password);
-                                    login(loginData.username, loginData.password, loginData.domain);
+                                    LinphonePreferences.instance().setProtocol(loginData.protocol);
+                                    login(
+                                            loginData.username,
+                                            loginData.password,
+                                            loginData.domain,
+                                            loginData.protocol);
                                 } else {
                                     loadQrCode2();
                                 }
@@ -279,7 +296,11 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
                         });
     }
 
-    private void login(final String username, final String password, final String domain) {
+    private void login(
+            final String username,
+            final String password,
+            final String domain,
+            final String protocol) {
 
         Core core = LinphoneManager.getCore();
         if (core != null) {
@@ -293,17 +314,17 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
         accountCreator.setPassword(password);
         accountCreator.setDisplayName("");
 
-        //            switch (mTransport.getCheckedRadioButtonId()) {
-        //                case R.id.transport_udp:
-        //                    accountCreator.setTransport(TransportType.Udp);
-        //                    break;
-        //                case R.id.transport_tcp:
-        //                    accountCreator.setTransport(TransportType.Tcp);
-        //                    break;
-        //                case R.id.transport_tls:
-        accountCreator.setTransport(TransportType.Tls);
-        //                    break;
-        //            }
+        switch (protocol.toUpperCase()) {
+            case "UDP":
+                accountCreator.setTransport(TransportType.Udp);
+                break;
+            case "TCP":
+                accountCreator.setTransport(TransportType.Tcp);
+                break;
+            case "TLS":
+                accountCreator.setTransport(TransportType.Tls);
+                break;
+        }
         progressDialog.dismiss();
         createProxyConfigAndLeaveAssistant(true);
     }
