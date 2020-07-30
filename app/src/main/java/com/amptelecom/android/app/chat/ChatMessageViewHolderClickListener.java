@@ -19,6 +19,6 @@
  */
 package com.amptelecom.android.app.chat;
 
-interface ChatMessageViewHolderClickListener {
+public interface ChatMessageViewHolderClickListener {
     void onItemClicked(int position);
 }

@@ -49,7 +49,7 @@ import com.amptelecom.android.app.R;
 import com.amptelecom.android.app.call.CallActivity;
 import com.amptelecom.android.app.call.CallIncomingActivity;
 import com.amptelecom.android.app.call.CallOutgoingActivity;
-import com.amptelecom.android.app.chat.ChatActivity;
+import com.amptelecom.android.app.chatnew.ChatActivity;
 import com.amptelecom.android.app.compatibility.Compatibility;
 import com.amptelecom.android.app.contacts.ContactsActivity;
 import com.amptelecom.android.app.contacts.ContactsManager;

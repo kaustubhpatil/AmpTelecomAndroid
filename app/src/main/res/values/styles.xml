@@ -190,6 +190,11 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="contact_name_list_cell_font2" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
     <style name="generated_contact_avatar_font" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">?attr/secondaryTextColor</item>
         <item name="android:textSize">21sp</item>

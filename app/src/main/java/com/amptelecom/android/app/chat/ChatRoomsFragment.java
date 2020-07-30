@@ -239,8 +239,9 @@ public class ChatRoomsFragment extends Fragment
         refreshChatRoomsList();
 
         ProxyConfig lpc = core.getDefaultProxyConfig();
-        mNewGroupDiscussionButton.setVisibility(
-                (lpc != null && lpc.getConferenceFactoryUri() != null) ? View.VISIBLE : View.GONE);
+        //        mNewGroupDiscussionButton.setVisibility(
+        //                (lpc != null && lpc.getConferenceFactoryUri() != null) ? View.VISIBLE :
+        // View.GONE);
     }
 
     @Override

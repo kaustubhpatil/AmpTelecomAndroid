@@ -52,7 +52,8 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
             SearchContactViewHolder.ClickListener clickListener,
             boolean hideSelectionMark,
             boolean isSecurityEnabled) {
-        mIsOnlyOnePersonSelection = hideSelectionMark;
+        //        mIsOnlyOnePersonSelection = hideSelectionMark;
+        mIsOnlyOnePersonSelection = true;
         mListener = clickListener;
         setContactsSelectedList(null);
         mPreviousSearch = null;

@@ -118,7 +118,7 @@
             android:name=".settings.SettingsActivity"/>
 
         <activity
-            android:name=".chat.ChatActivity"
+            android:name=".chatnew.ChatActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
