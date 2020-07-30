@@ -316,7 +316,7 @@ public class ChatMessageFragment extends Fragment
     ChatMessagesAdapter mEventsAdapter;
     ProgressDialog progressDialog;
 
-    private void fetchHistory2() {
+    private void fetchHistory() {
         progressDialog = new ProgressDialog(getActivity(), ProgressDialog.STYLE_SPINNER);
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
@@ -367,7 +367,7 @@ public class ChatMessageFragment extends Fragment
                 });
     }
 
-    private void fetchHistory() {
+    private void fetchHistory2() {
         ApiService service = RetrofitClientInstance.getRetrofitInstance().create(ApiService.class);
         Call<ResponseBody> call =
                 service.getMessages2(
