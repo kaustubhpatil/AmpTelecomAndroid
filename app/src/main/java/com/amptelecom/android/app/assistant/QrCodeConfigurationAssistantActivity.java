@@ -28,6 +28,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -38,6 +39,7 @@ import com.amptelecom.android.app.R;
 import com.amptelecom.android.app.network.ApiService;
 import com.amptelecom.android.app.network.RetrofitClientInstance;
 import com.amptelecom.android.app.network.model.LoginData;
+import com.amptelecom.android.app.network.model.ServerResponse;
 import com.amptelecom.android.app.settings.LinphonePreferences;
 import com.amptelecom.android.app.utils.FileUtil;
 import com.budiyev.android.codescanner.CodeScanner;
@@ -265,15 +267,16 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
         ApiService service = RetrofitClientInstance.getRetrofitInstance().create(ApiService.class);
         service.getLoginDetails(url)
                 .enqueue(
-                        new Callback<List<LoginData>>() {
+                        new Callback<ServerResponse<List<LoginData>>>() {
                             @Override
                             public void onResponse(
-                                    Call<List<LoginData>> call,
-                                    Response<List<LoginData>> response) {
+                                    Call<ServerResponse<List<LoginData>>> call,
+                                    Response<ServerResponse<List<LoginData>>> response) {
                                 if (response != null
                                         && response.body() != null
-                                        && response.body().size() > 0) {
-                                    LoginData loginData = response.body().get(0);
+                                        && response.body().statusCode == 200
+                                        && response.body().data.size() > 0) {
+                                    LoginData loginData = response.body().data.get(0);
                                     LinphonePreferences.instance().setUsername(loginData.username);
                                     LinphonePreferences.instance().setDomain(loginData.domain);
                                     LinphonePreferences.instance().setPassword(loginData.password);
@@ -289,7 +292,8 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
                             }
 
                             @Override
-                            public void onFailure(Call<List<LoginData>> call, Throwable t) {
+                            public void onFailure(
+                                    Call<ServerResponse<List<LoginData>>> call, Throwable t) {
                                 progressDialog.dismiss();
                                 loadQrCode2();
                             }
@@ -327,6 +331,14 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
         }
         progressDialog.dismiss();
         createProxyConfigAndLeaveAssistant(true);
+
+        // upload push token
+        String pushNotificationRegistrationID =
+                LinphonePreferences.instance().getPushNotificationRegistrationID();
+        if (!TextUtils.isEmpty(pushNotificationRegistrationID)) {
+            LinphonePreferences.instance()
+                    .setPushNotificationRegistrationID(pushNotificationRegistrationID);
+        }
     }
 
     private boolean checkPermission(String permission) {

@@ -32,6 +32,7 @@ import com.amptelecom.android.app.network.ApiService;
 import com.amptelecom.android.app.network.RetrofitClientInstance;
 import com.amptelecom.android.app.network.model.ContactEntries;
 import com.amptelecom.android.app.network.model.Contacts;
+import com.amptelecom.android.app.network.model.ServerResponse;
 import com.amptelecom.android.app.settings.LinphonePreferences;
 import com.amptelecom.android.app.utils.LinphoneUtils;
 import java.util.ArrayList;
@@ -326,27 +327,28 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
 
     private void fetchContacts() {
         ApiService service = RetrofitClientInstance.getRetrofitInstance().create(ApiService.class);
-        Call<ContactReponse> call =
+        Call<ServerResponse<ContactResponse>> call =
                 service.getContacts(
                         LinphonePreferences.instance().getUsername(),
                         LinphonePreferences.instance().getDomain(),
                         LinphonePreferences.instance().getPassword(),
                         UUID.randomUUID().toString());
         call.enqueue(
-                new Callback<ContactReponse>() {
+                new Callback<ServerResponse<ContactResponse>>() {
                     @SuppressWarnings("NullableProblems")
                     @Override
                     public void onResponse(
-                            Call<ContactReponse> call, Response<ContactReponse> response) {
-                        if (response.body() != null) {
-                            postExecution(response.body().getContactEntries());
+                            Call<ServerResponse<ContactResponse>> call,
+                            Response<ServerResponse<ContactResponse>> response) {
+                        if (response.body() != null && response.body().statusCode == 200) {
+                            postExecution(response.body().data.contacts);
                         } else {
                             postExecution(null);
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<ContactReponse> call, Throwable t) {
+                    public void onFailure(Call<ServerResponse<ContactResponse>> call, Throwable t) {
                         Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });

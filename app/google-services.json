@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "170985231879",
-    "firebase_url": "https://amptelecomandroid.firebaseio.com",
-    "project_id": "amptelecomandroid",
-    "storage_bucket": "amptelecomandroid.appspot.com"
+    "project_number": "457478188429",
+    "firebase_url": "https://amp-fcm-smartphone.firebaseio.com",
+    "project_id": "amp-fcm-smartphone",
+    "storage_bucket": "amp-fcm-smartphone.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:170985231879:android:0f4f202acd6d74f466bca2",
+        "mobilesdk_app_id": "1:457478188429:android:38f7fb337247c3f4cc21c4",
         "android_client_info": {
           "package_name": "com.amptelecom.android.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "170985231879-ngitbaqfp0vv3g3ram8puc5m76m2grq3.apps.googleusercontent.com",
+          "client_id": "457478188429-34pae4qqvb8mvk3drbpt8k55694vgf6r.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAoth0Y3_pt0ZdS1GcOuUQ_UQK8D3mxcOw"
+          "current_key": "AIzaSyD70AiJfE7GYOeF1ElUM_jwi8Of8Sl5jCE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "170985231879-ngitbaqfp0vv3g3ram8puc5m76m2grq3.apps.googleusercontent.com",
+              "client_id": "457478188429-34pae4qqvb8mvk3drbpt8k55694vgf6r.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

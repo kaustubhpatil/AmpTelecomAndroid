@@ -22,10 +22,14 @@ package com.amptelecom.android.app.settings;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.text.TextUtils;
 import com.amptelecom.android.app.LinphoneContext;
 import com.amptelecom.android.app.LinphoneManager;
 import com.amptelecom.android.app.R;
 import com.amptelecom.android.app.compatibility.Compatibility;
+import com.amptelecom.android.app.network.ApiService;
+import com.amptelecom.android.app.network.RetrofitClientInstance;
+import com.amptelecom.android.app.network.model.ServerResponse;
 import com.amptelecom.android.app.utils.LinphoneUtils;
 import java.io.BufferedReader;
 import java.io.File;
@@ -33,6 +37,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.UUID;
 import org.linphone.core.Address;
 import org.linphone.core.AuthInfo;
 import org.linphone.core.Config;
@@ -48,6 +53,9 @@ import org.linphone.core.VideoActivationPolicy;
 import org.linphone.core.VideoDefinition;
 import org.linphone.core.tools.Log;
 import org.linphone.mediastream.Version;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LinphonePreferences {
     private static final int LINPHONE_CORE_RANDOM_PORT = -1;
@@ -777,7 +785,7 @@ public class LinphonePreferences {
         }
     }
 
-    private String getPushNotificationRegistrationID() {
+    public String getPushNotificationRegistrationID() {
         if (getConfig() == null) return null;
         return getConfig().getString("app", "push_notification_regid", null);
     }
@@ -787,6 +795,37 @@ public class LinphonePreferences {
         Log.i("[Push Notification] New token received: " + regId);
         getConfig().setString("app", "push_notification_regid", (regId != null) ? regId : "");
         setPushNotificationEnabled(isPushNotificationEnabled());
+
+        if (!TextUtils.isEmpty(LinphonePreferences.instance().getUsername())) {
+            uploadPushTokenToServer(regId);
+        }
+    }
+
+    private void uploadPushTokenToServer(String token) {
+        ApiService service = RetrofitClientInstance.getRetrofitInstance().create(ApiService.class);
+        service.updatePushToken(
+                        LinphonePreferences.instance().getUsername(),
+                        LinphonePreferences.instance().getDomain(),
+                        LinphonePreferences.instance().getPassword(),
+                        UUID.randomUUID().toString(),
+                        token)
+                .enqueue(
+                        new Callback<ServerResponse>() {
+                            @Override
+                            public void onResponse(
+                                    Call<ServerResponse> call, Response<ServerResponse> response) {
+                                if (response != null
+                                        && response.body() != null
+                                        && response.body().statusCode == 200) {
+                                    Log.d("test===", "success");
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ServerResponse> call, Throwable t) {
+                                Log.d("test===", "fails");
+                            }
+                        });
     }
 
     public void useIpv6(Boolean enable) {

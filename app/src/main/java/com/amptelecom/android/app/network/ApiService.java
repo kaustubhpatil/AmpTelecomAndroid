@@ -3,8 +3,9 @@ package com.amptelecom.android.app.network;
 import com.amptelecom.android.app.chatnew.model.ChatConversationsResponse;
 import com.amptelecom.android.app.chatnew.model.ChatMessagesResponse;
 import com.amptelecom.android.app.chatnew.model.GeneralResponse;
-import com.amptelecom.android.app.contacts.ContactReponse;
+import com.amptelecom.android.app.contacts.ContactResponse;
 import com.amptelecom.android.app.network.model.LoginData;
+import com.amptelecom.android.app.network.model.ServerResponse;
 import java.util.List;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -18,14 +19,14 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("smartphone2/getContacts/")
-    Call<ContactReponse> getContacts(
+    Call<ServerResponse<ContactResponse>> getContacts(
             @Field("extension") String extension,
             @Field("realm") String host,
             @Field("pw") String password,
             @Field("installid") String uuid);
 
     @GET
-    Call<List<LoginData>> getLoginDetails(@Url String url);
+    Call<ServerResponse<List<LoginData>>> getLoginDetails(@Url String url);
 
     @FormUrlEncoded
     @POST("smartphone2/getConversationID/")
@@ -87,4 +88,13 @@ public interface ApiService {
             @Field("cc") String cc,
             @Field("sms_body") String sms_body,
             @Field("attachments") String attachments);
+
+    @FormUrlEncoded
+    @POST("smartphone2/pushToken")
+    Call<ServerResponse> updatePushToken(
+            @Field("extension") String extension,
+            @Field("realm") String host,
+            @Field("pw") String password,
+            @Field("installid") String uuid,
+            @Field("token") String token);
 }
