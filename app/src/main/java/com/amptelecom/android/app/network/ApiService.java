@@ -87,7 +87,8 @@ public interface ApiService {
             @Field("sms_to") String sms_to,
             @Field("cc") String cc,
             @Field("sms_body") String sms_body,
-            @Field("attachments") String attachments);
+            @Field("attachments") String attachments,
+            @Field("conversationid") String conversationid);
 
     @FormUrlEncoded
     @POST("smartphone2/pushToken")

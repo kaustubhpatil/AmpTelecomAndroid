@@ -912,7 +912,7 @@ public class ChatMessageFragment extends Fragment
                         to,
                         cc,
                         mMessageTextToSend.getText().toString(),
-                        "[]");
+                        "[]", chatid);
         android.util.Log.i("ttt", "called" + cc);
         call.enqueue(
                 new Callback<ChatMessagesResponse>() {
