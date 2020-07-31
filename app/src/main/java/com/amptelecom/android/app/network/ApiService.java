@@ -7,12 +7,16 @@ import com.amptelecom.android.app.contacts.ContactResponse;
 import com.amptelecom.android.app.network.model.LoginData;
 import com.amptelecom.android.app.network.model.ServerResponse;
 import java.util.List;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Url;
 
 public interface ApiService {
@@ -89,6 +93,19 @@ public interface ApiService {
             @Field("sms_body") String sms_body,
             @Field("attachments") String attachments,
             @Field("conversationid") String conversationid);
+
+    @Multipart
+    @POST("smartphone2/sendMessage/")
+    Call<ChatMessagesResponse> sendMessage(
+            @Part("extension") RequestBody extension,
+            @Part("realm") RequestBody host,
+            @Part("pw") RequestBody password,
+            @Part("installid") RequestBody uuid,
+            @Part("sms_to") RequestBody sms_to,
+            @Part("cc") RequestBody cc,
+            @Part("sms_body") RequestBody sms_body,
+            @Part MultipartBody.Part image,
+            @Part("conversationid") RequestBody conversationid);
 
     @FormUrlEncoded
     @POST("smartphone2/pushToken")

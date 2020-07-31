@@ -62,6 +62,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
@@ -210,7 +213,7 @@ public class ChatMessageFragment extends Fragment
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        sendMessage();
+                        onSendClicked();
                     }
                 });
 
@@ -898,10 +901,19 @@ public class ChatMessageFragment extends Fragment
         mSendMessageButton.setEnabled(true);
     }
 
-    private void sendMessage() {
+    private void onSendClicked() {
         progressDialog = new ProgressDialog(getActivity(), ProgressDialog.STYLE_SPINNER);
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
+        int filesCount = mFilesUploadLayout.getChildCount();
+        if (filesCount > 0) {
+            uploadAttachment(filesCount);
+        } else {
+            sendMessage();
+        }
+    }
+
+    private void sendMessage() {
         ApiService service = RetrofitClientInstance.getRetrofitInstance().create(ApiService.class);
         Call<ChatMessagesResponse> call =
                 service.sendMessage(
@@ -936,6 +948,78 @@ public class ChatMessageFragment extends Fragment
                         android.util.Log.i("ttt", "failure");
                     }
                 });
+    }
+
+    private void uploadAttachment(int filesCount) {
+        for (int i = 0; i < filesCount; i++) {
+            String filePath = (String) mFilesUploadLayout.getChildAt(i).getTag();
+            File file = new File(filePath);
+            RequestBody requestFile =
+                    RequestBody.create(MediaType.parse("multipart/form-data"), file);
+
+            // MultipartBody.Part is used to send also the actual file name
+            MultipartBody.Part body =
+                    MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+
+            ApiService service =
+                    RetrofitClientInstance.getRetrofitInstance().create(ApiService.class);
+
+            RequestBody username =
+                    RequestBody.create(
+                            MediaType.parse("text/plain"),
+                            LinphonePreferences.instance().getUsername());
+            RequestBody domain =
+                    RequestBody.create(
+                            MediaType.parse("text/plain"),
+                            LinphonePreferences.instance().getDomain());
+            RequestBody password =
+                    RequestBody.create(
+                            MediaType.parse("text/plain"),
+                            LinphonePreferences.instance().getPassword());
+            RequestBody uuid =
+                    RequestBody.create(MediaType.parse("text/plain"), UUID.randomUUID().toString());
+            RequestBody sender = RequestBody.create(MediaType.parse("text/plain"), to);
+            RequestBody recipients = RequestBody.create(MediaType.parse("text/plain"), cc);
+            RequestBody text =
+                    RequestBody.create(
+                            MediaType.parse("text/plain"), mMessageTextToSend.getText().toString());
+            RequestBody conversationId = RequestBody.create(MediaType.parse("text/plain"), chatid);
+
+            Call<ChatMessagesResponse> call =
+                    service.sendMessage(
+                            username,
+                            domain,
+                            password,
+                            uuid,
+                            sender,
+                            recipients,
+                            text,
+                            body,
+                            conversationId);
+            android.util.Log.i("ttt", "called" + cc);
+            call.enqueue(
+                    new Callback<ChatMessagesResponse>() {
+                        @Override
+                        public void onResponse(
+                                Call<ChatMessagesResponse> call,
+                                Response<ChatMessagesResponse> response) {
+                            mFilesUploadLayout.removeAllViews();
+                            mAttachImageButton.setEnabled(true);
+                            mMessageTextToSend.setEnabled(true);
+                            mMessageTextToSend.setText("");
+                            progressDialog.dismiss();
+                        }
+
+                        @Override
+                        public void onFailure(Call<ChatMessagesResponse> call, Throwable t) {
+                            mFilesUploadLayout.removeAllViews();
+                            mAttachImageButton.setEnabled(true);
+                            mMessageTextToSend.setEnabled(true);
+                            mMessageTextToSend.setText("");
+                            progressDialog.dismiss();
+                        }
+                    });
+        }
     }
 
     /** Message sending */
