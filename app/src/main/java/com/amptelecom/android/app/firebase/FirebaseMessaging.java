@@ -19,13 +19,27 @@
  */
 package com.amptelecom.android.app.firebase;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
+import android.widget.RemoteViews;
 import android.widget.Toast;
+import androidx.core.app.NotificationCompat;
 import com.amptelecom.android.app.LinphoneContext;
 import com.amptelecom.android.app.LinphoneManager;
+import com.amptelecom.android.app.R;
+import com.amptelecom.android.app.activities.MainActivity;
 import com.amptelecom.android.app.settings.LinphonePreferences;
 import com.amptelecom.android.app.utils.LinphoneUtils;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import java.util.Random;
 import org.linphone.core.Core;
 import org.linphone.core.tools.Log;
 
@@ -75,5 +89,90 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         } catch (Exception e) {
         }
         LinphoneUtils.dispatchOnUIThread(mPushReceivedRunnable);
+        try {
+            if (remoteMessage.getData().size() > 0) {
+                showNoti(
+                        remoteMessage.getData().get("title"),
+                        remoteMessage.getData().get("message"));
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    public void showNoti(String title, String message) {
+        try {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("from", "Notification");
+
+            PendingIntent resultPendingIntent =
+                    PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
+            Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+            final RemoteViews remoteViews =
+                    new RemoteViews(getPackageName(), R.layout.custom_notification);
+            remoteViews.setTextViewText(R.id.title, title);
+            remoteViews.setTextViewText(R.id.message, message);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                String name = "AmpTelecom";
+                String id2 = "AmpTelecom";
+                String description = "Info";
+
+                androidx.core.app.NotificationCompat.Builder builder;
+
+                NotificationManager notifManager =
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                int importance = NotificationManager.IMPORTANCE_HIGH;
+                NotificationChannel mChannel = notifManager.getNotificationChannel(id2);
+                if (mChannel == null) {
+                    mChannel = new NotificationChannel(id2, name, importance);
+                    mChannel.setDescription(description);
+                    mChannel.enableVibration(true);
+                    mChannel.setVibrationPattern(
+                            new long[] {100, 200, 300, 400, 500, 400, 300, 200, 400});
+                    notifManager.createNotificationChannel(mChannel);
+                }
+                builder =
+                        new androidx.core.app.NotificationCompat.Builder(
+                                getApplicationContext(), id2);
+
+                builder.setContentTitle(title)
+                        .setSmallIcon(R.drawable.linphone_notification_icon)
+                        .setDefaults(Notification.DEFAULT_ALL)
+                        .setOngoing(false)
+                        .setAutoCancel(true)
+                        .setGroup("" + new Random().nextInt())
+                        .setContentIntent(resultPendingIntent)
+                        .setVibrate(new long[] {100, 200, 300, 400, 500, 400, 300, 200, 400})
+                        .setContent(remoteViews);
+
+                Notification notification = builder.build();
+
+                notifManager.notify(new Random().nextInt() /* ID of notification */, notification);
+
+            } else {
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+                Notification notification;
+                notification =
+                        mBuilder.setSmallIcon(R.drawable.linphone_notification_icon)
+                                .setWhen(0)
+                                .setOngoing(false)
+                                .setAutoCancel(true)
+                                .setSound(soundUri)
+                                .setGroup("" + new Random().nextInt())
+                                .setContentIntent(resultPendingIntent)
+                                .setContentTitle(title)
+                                .setSmallIcon(R.mipmap.ic_launcher)
+                                .setContent(remoteViews)
+                                .build();
+                NotificationManager notificationManager =
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.notify(new Random().nextInt(), notification);
+            }
+        } catch (Exception e) {
+        }
     }
 }
