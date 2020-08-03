@@ -22,6 +22,7 @@ package com.amptelecom.android.app.settings;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.provider.Settings;
 import android.text.TextUtils;
 import com.amptelecom.android.app.LinphoneContext;
 import com.amptelecom.android.app.LinphoneManager;
@@ -37,7 +38,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.UUID;
 import org.linphone.core.Address;
 import org.linphone.core.AuthInfo;
 import org.linphone.core.Config;
@@ -790,24 +790,25 @@ public class LinphonePreferences {
         return getConfig().getString("app", "push_notification_regid", null);
     }
 
-    public void setPushNotificationRegistrationID(String regId) {
+    public void setPushNotificationRegistrationID(String regId, Context context) {
         if (getConfig() == null) return;
         Log.i("[Push Notification] New token received: " + regId);
         getConfig().setString("app", "push_notification_regid", (regId != null) ? regId : "");
         setPushNotificationEnabled(isPushNotificationEnabled());
 
         if (!TextUtils.isEmpty(LinphonePreferences.instance().getUsername())) {
-            uploadPushTokenToServer(regId);
+            uploadPushTokenToServer(regId, context);
         }
     }
 
-    private void uploadPushTokenToServer(String token) {
+    private void uploadPushTokenToServer(String token, Context context) {
         ApiService service = RetrofitClientInstance.getRetrofitInstance().create(ApiService.class);
         service.updatePushToken(
                         LinphonePreferences.instance().getUsername(),
                         LinphonePreferences.instance().getDomain(),
                         LinphonePreferences.instance().getPassword(),
-                        UUID.randomUUID().toString(),
+                        Settings.Secure.getString(
+                                context.getContentResolver(), Settings.Secure.ANDROID_ID),
                         token)
                 .enqueue(
                         new Callback<ServerResponse>() {

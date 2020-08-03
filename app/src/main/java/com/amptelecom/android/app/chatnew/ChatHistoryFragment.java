@@ -2,6 +2,7 @@ package com.amptelecom.android.app.chatnew;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,6 @@ import com.amptelecom.android.app.utils.SelectableHelper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import okhttp3.ResponseBody;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListenerStub;
@@ -159,7 +159,8 @@ public class ChatHistoryFragment extends Fragment
                         LinphonePreferences.instance().getUsername(),
                         LinphonePreferences.instance().getDomain(),
                         LinphonePreferences.instance().getPassword(),
-                        UUID.randomUUID().toString());
+                        Settings.Secure.getString(
+                                getActivity().getContentResolver(), Settings.Secure.ANDROID_ID));
         call.enqueue(
                 new Callback<ResponseBody>() {
                     @Override
@@ -186,7 +187,8 @@ public class ChatHistoryFragment extends Fragment
                         LinphonePreferences.instance().getUsername(),
                         LinphonePreferences.instance().getDomain(),
                         LinphonePreferences.instance().getPassword(),
-                        UUID.randomUUID().toString());
+                        Settings.Secure.getString(
+                                getActivity().getContentResolver(), Settings.Secure.ANDROID_ID));
         call.enqueue(
                 new Callback<ChatConversationsResponse>() {
                     @Override

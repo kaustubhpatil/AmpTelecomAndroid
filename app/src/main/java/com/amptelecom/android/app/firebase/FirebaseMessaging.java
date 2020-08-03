@@ -75,7 +75,8 @@ public class FirebaseMessaging extends FirebaseMessagingService {
                 new Runnable() {
                     @Override
                     public void run() {
-                        LinphonePreferences.instance().setPushNotificationRegistrationID(token);
+                        LinphonePreferences.instance()
+                                .setPushNotificationRegistrationID(token, getApplicationContext());
                     }
                 });
     }

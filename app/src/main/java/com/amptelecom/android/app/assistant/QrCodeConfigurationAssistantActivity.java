@@ -337,7 +337,9 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
                 LinphonePreferences.instance().getPushNotificationRegistrationID();
         if (!TextUtils.isEmpty(pushNotificationRegistrationID)) {
             LinphonePreferences.instance()
-                    .setPushNotificationRegistrationID(pushNotificationRegistrationID);
+                    .setPushNotificationRegistrationID(
+                            pushNotificationRegistrationID,
+                            QrCodeConfigurationAssistantActivity.this);
         }
     }
 

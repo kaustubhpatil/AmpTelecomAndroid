@@ -58,7 +58,7 @@ public class FirebasePushHelper implements PushNotificationUtils.PushHelperInter
                                     String token = task.getResult().getToken();
                                     Log.i("[Push Notification] firebase token is: " + token);
                                     LinphonePreferences.instance()
-                                            .setPushNotificationRegistrationID(token);
+                                            .setPushNotificationRegistrationID(token, context);
                                 }
                             });
         } catch (Exception e) {

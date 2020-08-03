@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -62,7 +63,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -331,7 +331,8 @@ public class ChatMessageFragment extends Fragment
                         LinphonePreferences.instance().getUsername(),
                         LinphonePreferences.instance().getDomain(),
                         LinphonePreferences.instance().getPassword(),
-                        UUID.randomUUID().toString(),
+                        Settings.Secure.getString(
+                                getActivity().getContentResolver(), Settings.Secure.ANDROID_ID),
                         "",
                         "",
                         chatid);
@@ -379,7 +380,8 @@ public class ChatMessageFragment extends Fragment
                         LinphonePreferences.instance().getUsername(),
                         LinphonePreferences.instance().getDomain(),
                         LinphonePreferences.instance().getPassword(),
-                        UUID.randomUUID().toString(),
+                        Settings.Secure.getString(
+                                getActivity().getContentResolver(), Settings.Secure.ANDROID_ID),
                         "",
                         "",
                         chatid);
@@ -926,7 +928,8 @@ public class ChatMessageFragment extends Fragment
                         LinphonePreferences.instance().getUsername(),
                         LinphonePreferences.instance().getDomain(),
                         LinphonePreferences.instance().getPassword(),
-                        UUID.randomUUID().toString(),
+                        Settings.Secure.getString(
+                                getActivity().getContentResolver(), Settings.Secure.ANDROID_ID),
                         to,
                         ccs,
                         mMessageTextToSend.getText().toString(),
@@ -983,7 +986,11 @@ public class ChatMessageFragment extends Fragment
                             MediaType.parse("text/plain"),
                             LinphonePreferences.instance().getPassword());
             RequestBody uuid =
-                    RequestBody.create(MediaType.parse("text/plain"), UUID.randomUUID().toString());
+                    RequestBody.create(
+                            MediaType.parse("text/plain"),
+                            Settings.Secure.getString(
+                                    getActivity().getContentResolver(),
+                                    Settings.Secure.ANDROID_ID));
             RequestBody sender = RequestBody.create(MediaType.parse("text/plain"), to);
             String ccs = "[]";
             if (cc != null && cc.size() > 0) {

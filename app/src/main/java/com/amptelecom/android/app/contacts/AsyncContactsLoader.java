@@ -24,6 +24,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.widget.Toast;
 import com.amptelecom.android.app.LinphoneManager;
 import com.amptelecom.android.app.R;
@@ -40,7 +41,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 import org.linphone.core.Core;
 import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
@@ -273,7 +273,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                         + data.sipContacts.size()
                         + " are SIP");
 
-        fetchContacts();
+        fetchContacts(mContext);
     }
 
     private AsyncContactsData dataContacts;
@@ -325,14 +325,15 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
         Log.i("[Contacts Manager] Synchronization finished");
     }
 
-    private void fetchContacts() {
+    private void fetchContacts(Context context) {
         ApiService service = RetrofitClientInstance.getRetrofitInstance().create(ApiService.class);
         Call<ServerResponse<ContactResponse>> call =
                 service.getContacts(
                         LinphonePreferences.instance().getUsername(),
                         LinphonePreferences.instance().getDomain(),
                         LinphonePreferences.instance().getPassword(),
-                        UUID.randomUUID().toString());
+                        Settings.Secure.getString(
+                                context.getContentResolver(), Settings.Secure.ANDROID_ID));
         call.enqueue(
                 new Callback<ServerResponse<ContactResponse>>() {
                     @SuppressWarnings("NullableProblems")
