@@ -202,7 +202,7 @@ public class ChatHistoryFragment extends Fragment
 
                     @Override
                     public void onFailure(Call<ChatConversationsResponse> call, Throwable t) {
-                        android.util.Log.i("ttt", "failure");
+                        android.util.Log.i("ttt", "failure" + t.getLocalizedMessage());
                     }
                 });
     }

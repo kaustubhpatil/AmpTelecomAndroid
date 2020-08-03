@@ -235,7 +235,7 @@ public class ChatActivity extends MainActivity {
         showForwardDialog(localAddress, peerAddress);
     }
 
-    public void showChatRoom(String chatid, String to, String cc) {
+    public void showChatRoom(String chatid, String to, ArrayList<String> cc) {
         Bundle extras = new Bundle();
         if (chatid != null) {
             extras.putSerializable("chatid", chatid);
@@ -244,7 +244,7 @@ public class ChatActivity extends MainActivity {
             extras.putSerializable("to", to);
         }
         if (to != null) {
-            extras.putSerializable("cc", cc);
+            extras.putStringArrayList("cc", cc);
         }
 
         if (mSharedText != null) {

@@ -91,9 +91,12 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         LinphoneUtils.dispatchOnUIThread(mPushReceivedRunnable);
         try {
             if (remoteMessage.getData().size() > 0) {
+                android.util.Log.i("ttt", "success" + remoteMessage.getData().toString());
                 showNoti(
                         remoteMessage.getData().get("title"),
                         remoteMessage.getData().get("message"));
+            } else {
+                android.util.Log.i("ttt", "success" + remoteMessage.getNotification().toString());
             }
         } catch (Exception e) {
         }

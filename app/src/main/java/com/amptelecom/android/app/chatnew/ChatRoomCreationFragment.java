@@ -150,14 +150,20 @@ public class ChatRoomCreationFragment extends Fragment
                     @Override
                     public void onClick(View v) {
                         if (listNumbers.size() != 0) {
+                            ArrayList<String> list = new ArrayList<>();
                             if (listNumbers.size() == 1) {
-                                callApi(listNumbers.get(0), "[]");
+                                callApi(listNumbers.get(0), "[]", new ArrayList<>());
                             } else if (listNumbers.size() == 2) {
-                                callApi(listNumbers.get(0), "[" + listNumbers.get(1) + "]");
+                                list.add(listNumbers.get(1));
+                                callApi(listNumbers.get(0), "[" + listNumbers.get(1) + "]", list);
                             } else {
+                                for (int i = 1; i < listNumbers.size(); i++) {
+                                    list.add(listNumbers.get(1));
+                                }
                                 callApi(
                                         listNumbers.get(0),
-                                        "[" + TextUtils.join(",", listNumbers) + "]");
+                                        "[" + TextUtils.join(",", listNumbers) + "]",
+                                        list);
                             }
                         }
 
@@ -377,7 +383,7 @@ public class ChatRoomCreationFragment extends Fragment
     public void onItemClicked(int position) {
         SearchResult searchResult = mSearchAdapter.getContacts().get(position);
         if (!mCreateGroupChatRoom) {
-            callApi(searchResult.getPhoneNumber(), "[]");
+            callApi(searchResult.getPhoneNumber(), "[]", new ArrayList<>());
         } else {
             LinphoneContact c =
                     searchResult.getFriend() != null
@@ -399,7 +405,7 @@ public class ChatRoomCreationFragment extends Fragment
 
     ProgressDialog progressDialog;
 
-    private void callApi(final String to, final String cc) {
+    private void callApi(final String to, final String cc, ArrayList<String> ccList) {
         progressDialog = new ProgressDialog(getActivity(), ProgressDialog.STYLE_SPINNER);
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
@@ -422,7 +428,7 @@ public class ChatRoomCreationFragment extends Fragment
                         progressDialog.dismiss();
                         getFragmentManager().popBackStack();
                         ((ChatActivity) getActivity())
-                                .showChatRoom(response.body().getData(), to, cc);
+                                .showChatRoom(response.body().getData(), to, ccList);
                     }
 
                     @Override

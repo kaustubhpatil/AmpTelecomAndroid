@@ -50,6 +50,17 @@
 
             </RelativeLayout>
 
+            <ImageView
+                android:id="@+id/imageContent"
+                android:layout_width="wrap_content"
+                android:layout_height="150dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="5dp"
+                android:adjustViewBounds="true"
+                android:visibility="gone" />
+
             <com.amptelecom.android.app.views.MultiLineWrapContentWidthTextView
                 android:id="@+id/message"
                 android:layout_width="wrap_content"

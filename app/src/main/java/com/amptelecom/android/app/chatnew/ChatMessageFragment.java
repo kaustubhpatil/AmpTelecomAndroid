@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -109,7 +110,8 @@ public class ChatMessageFragment extends Fragment
     private LinearLayout mTopBar;
 
     private InputContentInfoCompat mCurrentInputContentInfo;
-    private String chatid = "", to = "", cc = "";
+    private String chatid = "", to = "";
+    private ArrayList<String> cc;
 
     @Override
     public View onCreateView(
@@ -129,8 +131,8 @@ public class ChatMessageFragment extends Fragment
             if (getArguments().getString("to") != null) {
                 to = getArguments().getString("to");
             }
-            if (getArguments().getString("cc") != null) {
-                cc = getArguments().getString("cc");
+            if (getArguments().getStringArrayList("cc") != null) {
+                cc = getArguments().getStringArrayList("cc");
             }
             if (getArguments().getString("RemoteSipUri") != null) {
                 mRemoteSipUri = getArguments().getString("RemoteSipUri");
@@ -381,7 +383,7 @@ public class ChatMessageFragment extends Fragment
                         "",
                         "",
                         chatid);
-        android.util.Log.i("ttt", "called" + chatid);
+        android.util.Log.i("ttt", "called" + call.request().toString());
 
         call.enqueue(
                 new Callback<ResponseBody>() {
@@ -915,6 +917,10 @@ public class ChatMessageFragment extends Fragment
 
     private void sendMessage() {
         ApiService service = RetrofitClientInstance.getRetrofitInstance().create(ApiService.class);
+        String ccs = "[]";
+        if (cc != null && cc.size() > 0) {
+            ccs = "[" + TextUtils.join(",", cc) + "]";
+        }
         Call<ChatMessagesResponse> call =
                 service.sendMessage(
                         LinphonePreferences.instance().getUsername(),
@@ -922,11 +928,11 @@ public class ChatMessageFragment extends Fragment
                         LinphonePreferences.instance().getPassword(),
                         UUID.randomUUID().toString(),
                         to,
-                        cc,
+                        ccs,
                         mMessageTextToSend.getText().toString(),
                         "[]",
                         chatid);
-        android.util.Log.i("ttt", "called" + cc);
+        android.util.Log.i("ttt", "called" + call.request().toString());
         call.enqueue(
                 new Callback<ChatMessagesResponse>() {
                     @Override
@@ -979,7 +985,11 @@ public class ChatMessageFragment extends Fragment
             RequestBody uuid =
                     RequestBody.create(MediaType.parse("text/plain"), UUID.randomUUID().toString());
             RequestBody sender = RequestBody.create(MediaType.parse("text/plain"), to);
-            RequestBody recipients = RequestBody.create(MediaType.parse("text/plain"), cc);
+            String ccs = "[]";
+            if (cc != null && cc.size() > 0) {
+                ccs = "[" + TextUtils.join(",", cc) + "]";
+            }
+            RequestBody recipients = RequestBody.create(MediaType.parse("text/plain"), ccs);
             RequestBody text =
                     RequestBody.create(
                             MediaType.parse("text/plain"), mMessageTextToSend.getText().toString());
@@ -1008,6 +1018,11 @@ public class ChatMessageFragment extends Fragment
                             mMessageTextToSend.setEnabled(true);
                             mMessageTextToSend.setText("");
                             progressDialog.dismiss();
+                            try {
+                                mEventsAdapter.addItem(response.body().getData().get(0));
+                                scrollToBottom();
+                            } catch (Exception e) {
+                            }
                         }
 
                         @Override

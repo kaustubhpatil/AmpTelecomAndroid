@@ -1,8 +1,12 @@
 package com.amptelecom.android.app.chatnew.model;
 
+import java.util.ArrayList;
+
 public class ChatData {
 
-    private String converstionid, message, direction, sms_id, ccrecipients, msgcreated, from, to;
+    private String converstionid, message, direction, sms_id, msgcreated, from, to;
+
+    private ArrayList<String> ccrecipients;
 
     public String getConverstionid() {
         return converstionid;
@@ -36,14 +40,6 @@ public class ChatData {
         this.sms_id = sms_id;
     }
 
-    public String getCcrecipients() {
-        return ccrecipients;
-    }
-
-    public void setCcrecipients(String ccrecipients) {
-        this.ccrecipients = ccrecipients;
-    }
-
     public String getMsgcreated() {
         return msgcreated;
     }
@@ -66,5 +62,13 @@ public class ChatData {
 
     public void setTo(String to) {
         this.to = to;
+    }
+
+    public ArrayList<String> getCcrecipients() {
+        return ccrecipients;
+    }
+
+    public void setCcrecipients(ArrayList<String> ccrecipients) {
+        this.ccrecipients = ccrecipients;
     }
 }

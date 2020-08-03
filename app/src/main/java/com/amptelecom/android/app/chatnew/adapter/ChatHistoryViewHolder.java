@@ -1,6 +1,7 @@
 package com.amptelecom.android.app.chatnew.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,15 +43,30 @@ public class ChatHistoryViewHolder extends RecyclerView.ViewHolder
     }
 
     public void bindChatRoom(ChatData room) {
+        if (room.getMessage() != null && room.getMessage().trim().length() > 0) {
+            lastMessageView.setText(room.getMessage());
+        } else {
+            lastMessageView.setText("Image");
+        }
 
-        lastMessageView.setText(room.getMessage());
         date.setText(covertTimeToText(room.getMsgcreated()));
         //        date.setText("22 seconds ago");
 
         if (room.getDirection().equals("inbound")) {
-            displayName.setText(room.getFrom());
+            if (room.getCcrecipients() != null && room.getCcrecipients().size() > 0) {
+                displayName.setText(
+                        room.getFrom() + "," + TextUtils.join(",", room.getCcrecipients()));
+            } else {
+                displayName.setText(room.getFrom());
+            }
+
         } else {
-            displayName.setText(room.getTo());
+            if (room.getCcrecipients() != null && room.getCcrecipients().size() > 0) {
+                displayName.setText(
+                        room.getTo() + "," + TextUtils.join(",", room.getCcrecipients()));
+            } else {
+                displayName.setText(room.getTo());
+            }
         }
         //        displayName.setText(getContact(room));
 
@@ -61,7 +77,7 @@ public class ChatHistoryViewHolder extends RecyclerView.ViewHolder
         String convTime = null;
 
         String prefix = "";
-        String suffix = "Ago";
+        //        String suffix = "Ago";
 
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -77,21 +93,21 @@ public class ChatHistoryViewHolder extends RecyclerView.ViewHolder
             long day = TimeUnit.MILLISECONDS.toDays(dateDiff);
 
             if (second < 60) {
-                convTime = second + " Seconds " + suffix;
+                convTime = second + " Seconds";
             } else if (minute < 60) {
-                convTime = minute + " Minutes " + suffix;
+                convTime = minute + " Minutes";
             } else if (hour < 24) {
-                convTime = hour + " Hours " + suffix;
+                convTime = hour + " Hours";
             } else if (day >= 7) {
                 if (day > 360) {
-                    convTime = (day / 360) + " Years " + suffix;
+                    convTime = (day / 360) + " Years";
                 } else if (day > 30) {
-                    convTime = (day / 30) + " Months " + suffix;
+                    convTime = (day / 30) + " Months";
                 } else {
-                    convTime = (day / 7) + " Week " + suffix;
+                    convTime = (day / 7) + " Week";
                 }
             } else if (day < 7) {
-                convTime = day + " Days " + suffix;
+                convTime = day + " Days";
             }
 
         } catch (ParseException e) {

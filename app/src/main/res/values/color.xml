@@ -26,8 +26,10 @@
     <color name="header_background_color">#f3f3f3</color>
     <color name="security_gray_color">#c2c2c2</color>
     <color name="chat_bubble_text_color">#a1a1a1</color>
-    <color name="chat_bubble_incoming_color">#f3f3f3</color>
-    <color name="chat_bubble_outgoing_color">#ffeee5</color>
+<!--    <color name="chat_bubble_incoming_color">#f3f3f3</color>-->
+    <color name="chat_bubble_incoming_color">#eaf2fd </color>
+<!--    <color name="chat_bubble_outgoing_color">#ffeee5</color>-->
+    <color name="chat_bubble_outgoing_color">#eaf2fd </color>
 
     <color name="disabled_color">#808080</color>
     <color name="contact_disabled_color">#99ffffff</color>

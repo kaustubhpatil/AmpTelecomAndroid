@@ -72,6 +72,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
 
     private final FlexboxLayout multiFileContents;
     private final RelativeLayout singleFileContent;
+    ImageView image;
 
     private CountDownTimer countDownTimer;
 
@@ -95,6 +96,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         bubbleLayout = view.findViewById(R.id.bubble);
         background = view.findViewById(R.id.background);
         avatarLayout = view.findViewById(R.id.avatar_layout);
+        image = view.findViewById(R.id.imageContent);
 
         downloadInProgress = view.findViewById(R.id.download_in_progress);
         sendInProgress = view.findViewById(R.id.send_in_progress);
@@ -125,6 +127,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         downloadInProgress.setVisibility(View.GONE);
         singleFileContent.setVisibility(View.GONE);
         multiFileContents.setVisibility(View.GONE);
+        image.setVisibility(View.GONE);
 
         //        ChatMessage.State status = message.getState();
         //        Address remoteSender = message.getFromAddress();
@@ -175,7 +178,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         if (!message.getDirection().equals("inbound")) {
             timeText.setText(time);
         } else {
-            timeText.setText(time + " - " + message.getMsg_from());
+            timeText.setText(time + " " + message.getMsg_from());
         }
 
         if (message.getMessage() != null && message.getMessage().trim().length() > 0) {
@@ -184,6 +187,13 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
             messageText.setText(text);
             messageText.setMovementMethod(LinkMovementMethod.getInstance());
             messageText.setVisibility(View.VISIBLE);
+        } else {
+            if (message.getMedia_url() != null && message.getMedia_url().trim().length() > 0) {
+                messageText.setVisibility(View.GONE);
+                image.setVisibility(View.VISIBLE);
+                android.util.Log.i("ttt", "called" + message.getMedia_url());
+                loadBitmap(message.getMedia_url(), image);
+            }
         }
 
         //        List<Content> fileContents = new ArrayList<>();
@@ -217,7 +227,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         String convTime = null;
 
         String prefix = "";
-        String suffix = "Ago";
+        //        String suffix = "Ago";
 
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -233,21 +243,21 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
             long day = TimeUnit.MILLISECONDS.toDays(dateDiff);
 
             if (second < 60) {
-                convTime = second + " Seconds " + suffix;
+                convTime = second + " Seconds";
             } else if (minute < 60) {
-                convTime = minute + " Minutes " + suffix;
+                convTime = minute + " Minutes";
             } else if (hour < 24) {
-                convTime = hour + " Hours " + suffix;
+                convTime = hour + " Hours";
             } else if (day >= 7) {
                 if (day > 360) {
-                    convTime = (day / 360) + " Years " + suffix;
+                    convTime = (day / 360) + " Years";
                 } else if (day > 30) {
-                    convTime = (day / 30) + " Months " + suffix;
+                    convTime = (day / 30) + " Months";
                 } else {
-                    convTime = (day / 7) + " Week " + suffix;
+                    convTime = (day / 7) + " Week";
                 }
             } else if (day < 7) {
-                convTime = day + " Days " + suffix;
+                convTime = day + " Days";
             }
 
         } catch (ParseException e) {
