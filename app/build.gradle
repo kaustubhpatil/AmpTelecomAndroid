@@ -182,6 +182,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.7.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.7.0'
+
+    implementation 'net.danlew:android.joda:2.10.6'
 }
 if (firebaseEnabled()) {
     apply plugin: 'com.google.gms.google-services'

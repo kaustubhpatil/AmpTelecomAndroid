@@ -259,6 +259,7 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
     ProgressDialog progressDialog;
 
     private void fetchLoginDetails(final String url) {
+        LinphonePreferences.instance().setProvisioningUrl(url);
         progressDialog =
                 new ProgressDialog(
                         QrCodeConfigurationAssistantActivity.this, ProgressDialog.STYLE_SPINNER);
@@ -281,6 +282,7 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
                                     LinphonePreferences.instance().setDomain(loginData.domain);
                                     LinphonePreferences.instance().setPassword(loginData.password);
                                     LinphonePreferences.instance().setProtocol(loginData.protocol);
+                                    LinphonePreferences.instance().setProxyUrl(loginData.proxy);
                                     login(
                                             loginData.username,
                                             loginData.password,

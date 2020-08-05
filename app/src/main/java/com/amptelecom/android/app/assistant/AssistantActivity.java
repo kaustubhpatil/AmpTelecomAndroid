@@ -155,7 +155,8 @@ public abstract class AssistantActivity extends LinphoneGenericActivity
                 // If this isn't a sip.linphone.org account, disable push notifications and enable
                 // service notification, otherwise incoming calls won't work (most probably)
                 if (proxyConfig != null) {
-                    proxyConfig.setPushNotificationAllowed(false);
+                    proxyConfig.setPushNotificationAllowed(true);
+                    proxyConfig.setServerAddr(LinphonePreferences.instance().getProxyUrl());
                 }
                 Log.w(
                         "[Assistant] Unknown domain used, push probably won't work, enable service mode");

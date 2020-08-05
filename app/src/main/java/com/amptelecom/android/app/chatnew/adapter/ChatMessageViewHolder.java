@@ -51,10 +51,9 @@ import com.amptelecom.android.app.utils.LinphoneUtils;
 import com.bumptech.glide.Glide;
 import com.google.android.flexbox.FlexboxLayout;
 import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
 import org.linphone.core.Content;
 import org.linphone.core.tools.Log;
 
@@ -178,22 +177,20 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         if (!message.getDirection().equals("inbound")) {
             timeText.setText(time);
         } else {
-            timeText.setText(time + " " + message.getMsg_from());
+            timeText.setText(time + "\n" + message.getMsg_from());
         }
 
-        if (message.getMessage() != null && message.getMessage().trim().length() > 0) {
+        if (message.getMedia_url() != null && message.getMedia_url().trim().length() > 0) {
+            messageText.setVisibility(View.GONE);
+            image.setVisibility(View.VISIBLE);
+            android.util.Log.i("ttt", "called" + message.getMedia_url());
+            loadBitmap(message.getMedia_url(), image);
+        } else if (message.getMessage() != null && message.getMessage().trim().length() > 0) {
             String msg = message.getMessage();
             Spanned text = LinphoneUtils.getTextWithHttpLinks(msg);
             messageText.setText(text);
             messageText.setMovementMethod(LinkMovementMethod.getInstance());
             messageText.setVisibility(View.VISIBLE);
-        } else {
-            if (message.getMedia_url() != null && message.getMedia_url().trim().length() > 0) {
-                messageText.setVisibility(View.GONE);
-                image.setVisibility(View.VISIBLE);
-                android.util.Log.i("ttt", "called" + message.getMedia_url());
-                loadBitmap(message.getMedia_url(), image);
-            }
         }
 
         //        List<Content> fileContents = new ArrayList<>();
@@ -222,50 +219,9 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         //        }
     }
 
-    public String covertTimeToText(String dataDate) {
-
-        String convTime = null;
-
-        String prefix = "";
-        //        String suffix = "Ago";
-
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            Date pasTime = dateFormat.parse(dataDate);
-
-            Date nowTime = new Date();
-
-            long dateDiff = nowTime.getTime() - pasTime.getTime();
-
-            long second = TimeUnit.MILLISECONDS.toSeconds(dateDiff);
-            long minute = TimeUnit.MILLISECONDS.toMinutes(dateDiff);
-            long hour = TimeUnit.MILLISECONDS.toHours(dateDiff);
-            long day = TimeUnit.MILLISECONDS.toDays(dateDiff);
-
-            if (second < 60) {
-                convTime = second + " Seconds";
-            } else if (minute < 60) {
-                convTime = minute + " Minutes";
-            } else if (hour < 24) {
-                convTime = hour + " Hours";
-            } else if (day >= 7) {
-                if (day > 360) {
-                    convTime = (day / 360) + " Years";
-                } else if (day > 30) {
-                    convTime = (day / 30) + " Months";
-                } else {
-                    convTime = (day / 7) + " Week";
-                }
-            } else if (day < 7) {
-                convTime = day + " Days";
-            }
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-            //            Log.e("ConvTimeE", e.getMessage());
-        }
-
-        return convTime;
+    private String covertTimeToText(String dataDate) {
+        DateTime dateTime = new DateTime(dataDate, DateTimeZone.getDefault());
+        return dateTime.toLocalDateTime().toString(DateTimeFormat.forPattern("MM/dd/yyyy hh:mm a"));
     }
 
     private void displayContent(
@@ -441,7 +397,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
     }
 
     private void loadBitmap(String path, ImageView imageView) {
-        Glide.with(mContext).load(path).into(imageView);
+        Glide.with(mContext).load(path).placeholder(R.mipmap.ic_launcher_round).into(imageView);
     }
 
     private String formatLifetime(long seconds) {

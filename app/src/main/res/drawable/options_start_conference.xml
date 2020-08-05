@@ -10,6 +10,6 @@
     </item>
     <item>
         <bitmap android:src="@drawable/options_start_conference_default"
-            android:tint="?attr/drawableTintColor"/>
+            android:tint="@color/light_grey_color"/>
     </item>
 </selector>

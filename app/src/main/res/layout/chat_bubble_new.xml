@@ -98,10 +98,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="45dp"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="5dp"
             android:layout_toLeftOf="@id/imdn"
-            android:gravity="right"
             android:textAppearance="@style/chat_bubble_time_font" />
 
 

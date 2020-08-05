@@ -548,7 +548,7 @@ public class ChatMessageFragment extends Fragment
                 (EventLog)
                         ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter())
                                 .getItem(mContextMenuMessagePosition);
-        if (event.getType() != EventLog.Type.ConferenceChatMessage) {
+        if (event != null && event.getType() != EventLog.Type.ConferenceChatMessage) {
             return;
         }
 

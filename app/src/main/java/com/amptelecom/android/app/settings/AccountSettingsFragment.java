@@ -646,7 +646,8 @@ public class AccountSettingsFragment extends SettingsFragment {
 
             mExpire.setValue(mProxyConfig.getExpires());
 
-            mPrefix.setValue(mProxyConfig.getDialPrefix());
+            mPrefix.setValue("");
+            // mPrefix.setValue(mProxyConfig.getDialPrefix());
 
             mAvpfInterval.setValue(mProxyConfig.getAvpfRrInterval());
             mAvpfInterval.setEnabled(mProxyConfig.avpfEnabled());
@@ -657,7 +658,7 @@ public class AccountSettingsFragment extends SettingsFragment {
             mUseAsDefault.setEnabled(!mUseAsDefault.isChecked());
 
             String[] routes = mProxyConfig.getRoutes();
-            mOutboundProxy.setChecked(routes != null && routes.length > 0);
+            mOutboundProxy.setChecked(routes != null);
 
             mIce.setChecked(natPolicy.iceEnabled());
             mIce.setEnabled(

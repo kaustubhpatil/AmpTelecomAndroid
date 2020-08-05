@@ -16,7 +16,7 @@
     <string name="about_license_link" translatable="false">https://www.gnu.org/licenses/gpl-3.0.html</string>
 
     <!-- Textual mention of the app name -->
-    <string name="user_agent" translatable="false">LinphoneAndroid</string>
+    <string name="user_agent" translatable="false">Amp Telecom for Android Smartphone</string>
     <string name="temp_photo_name" translatable="false">linphone-android-photo-temp</string>
     <string name="temp_photo_name_with_date" translatable="false">linphone-android-photo-%s</string>
 <!--    <string name="about_text" translatable="false">GNU General Public License V3\n © 2010–2020 Belledonne Communications</string>-->

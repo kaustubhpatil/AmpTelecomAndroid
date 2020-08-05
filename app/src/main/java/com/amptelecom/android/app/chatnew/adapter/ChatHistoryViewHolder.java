@@ -10,10 +10,10 @@ import com.amptelecom.android.app.chatnew.model.ChatData;
 import com.amptelecom.android.app.contacts.ContactsManager;
 import com.amptelecom.android.app.contacts.LinphoneContact;
 import com.amptelecom.android.app.utils.LinphoneUtils;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
@@ -72,49 +72,36 @@ public class ChatHistoryViewHolder extends RecyclerView.ViewHolder
 
     }
 
-    public String covertTimeToText(String dataDate) {
+    private String covertTimeToText(String dataDate) {
 
         String convTime = null;
+        DateTime dateTime = new DateTime(dataDate, DateTimeZone.getDefault());
+        Date nowTime = new Date();
 
-        String prefix = "";
-        //        String suffix = "Ago";
+        long dateDiff = nowTime.getTime() - dateTime.toDate().getTime();
 
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            Date pasTime = dateFormat.parse(dataDate);
+        long second = TimeUnit.MILLISECONDS.toSeconds(dateDiff);
+        long minute = TimeUnit.MILLISECONDS.toMinutes(dateDiff);
+        long hour = TimeUnit.MILLISECONDS.toHours(dateDiff);
+        long day = TimeUnit.MILLISECONDS.toDays(dateDiff);
 
-            Date nowTime = new Date();
-
-            long dateDiff = nowTime.getTime() - pasTime.getTime();
-
-            long second = TimeUnit.MILLISECONDS.toSeconds(dateDiff);
-            long minute = TimeUnit.MILLISECONDS.toMinutes(dateDiff);
-            long hour = TimeUnit.MILLISECONDS.toHours(dateDiff);
-            long day = TimeUnit.MILLISECONDS.toDays(dateDiff);
-
-            if (second < 60) {
-                convTime = second + " Seconds";
-            } else if (minute < 60) {
-                convTime = minute + " Minutes";
-            } else if (hour < 24) {
-                convTime = hour + " Hours";
-            } else if (day >= 7) {
-                if (day > 360) {
-                    convTime = (day / 360) + " Years";
-                } else if (day > 30) {
-                    convTime = (day / 30) + " Months";
-                } else {
-                    convTime = (day / 7) + " Week";
-                }
-            } else if (day < 7) {
-                convTime = day + " Days";
+        if (second < 60) {
+            convTime = second + " Seconds";
+        } else if (minute < 60) {
+            convTime = minute + " Minutes";
+        } else if (hour < 24) {
+            convTime = hour + " Hours";
+        } else if (day >= 7) {
+            if (day > 360) {
+                convTime = (day / 360) + " Years";
+            } else if (day > 30) {
+                convTime = (day / 30) + " Months";
+            } else {
+                convTime = (day / 7) + " Week";
             }
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-            //            Log.e("ConvTimeE", e.getMessage());
+        } else if (day < 7) {
+            convTime = day + " Days";
         }
-
         return convTime;
     }
 

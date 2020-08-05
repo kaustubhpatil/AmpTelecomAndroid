@@ -177,6 +177,10 @@ public class CallSettingsFragment extends SettingsFragment {
                     @Override
                     public void onListValueChanged(int position, String newLabel, String newValue) {
                         try {
+                            if (!newValue.equals("1")) {
+                                mPrefs.setMediaEncryption();
+                            }
+
                             MediaEncryption encryption =
                                     MediaEncryption.fromInt(Integer.parseInt(newValue));
                             mPrefs.setMediaEncryption(encryption);
@@ -279,7 +283,11 @@ public class CallSettingsFragment extends SettingsFragment {
 
         mAutoAnswer.setChecked(mPrefs.isAutoAnswerEnabled());
 
-        mMediaEncryption.setValue(mPrefs.getMediaEncryption().toInt());
+        if (!mPrefs.isMediaEncryptionSet()) {
+            mMediaEncryption.setValue(1);
+        } else {
+            mMediaEncryption.setValue(mPrefs.getMediaEncryption().toInt());
+        }
 
         mAutoAnswerTime.setValue(mPrefs.getAutoAnswerTime());
         mAutoAnswerTime.setVisibility(mPrefs.isAutoAnswerEnabled() ? View.VISIBLE : View.GONE);

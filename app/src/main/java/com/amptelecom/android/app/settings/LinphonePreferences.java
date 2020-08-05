@@ -794,7 +794,7 @@ public class LinphonePreferences {
         if (getConfig() == null) return;
         Log.i("[Push Notification] New token received: " + regId);
         getConfig().setString("app", "push_notification_regid", (regId != null) ? regId : "");
-        setPushNotificationEnabled(isPushNotificationEnabled());
+        setPushNotificationEnabled(true);
 
         if (!TextUtils.isEmpty(LinphonePreferences.instance().getUsername())) {
             uploadPushTokenToServer(regId, context);
@@ -1043,7 +1043,8 @@ public class LinphonePreferences {
     // End of tunnel settings
     public boolean adaptiveRateControlEnabled() {
         if (getLc() == null) return false;
-        return getLc().adaptiveRateControlEnabled();
+        return false;
+        // return getLc().adaptiveRateControlEnabled();
     }
 
     public void enableAdaptiveRateControl(boolean enabled) {
@@ -1351,6 +1352,14 @@ public class LinphonePreferences {
         return getConfig().getBool("app", "ephemeral", false);
     }
 
+    public String getProvisioningUrl() {
+        return getConfig().getString("app", "provisioningUrl", null);
+    }
+
+    public void setProvisioningUrl(String provisioningUrl) {
+        getConfig().setString("app", "provisioningUrl", provisioningUrl);
+    }
+
     public String getUsername() {
         return getConfig().getString("app", "username", null);
     }
@@ -1381,5 +1390,23 @@ public class LinphonePreferences {
 
     public void setProtocol(String protocol) {
         getConfig().setString("app", "protocol", protocol);
+    }
+
+    public String getProxyUrl() {
+        return getConfig().getString("app", "proxyUrl", null);
+    }
+
+    public void setProxyUrl(String proxyUrl) {
+        getConfig().setString("app", "proxyUrl", proxyUrl);
+    }
+
+    public boolean isMediaEncryptionSet() {
+        if (getConfig() == null) return true;
+        return getConfig().getBool("app", "mediaEncyption", false);
+    }
+
+    public void setMediaEncryption() {
+        if (getConfig() == null) return;
+        getConfig().setBool("app", "mediaEncyption", true);
     }
 }
