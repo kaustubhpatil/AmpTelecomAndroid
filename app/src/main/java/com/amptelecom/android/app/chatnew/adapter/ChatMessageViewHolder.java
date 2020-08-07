@@ -146,6 +146,18 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
 
             timeText.setVisibility(View.VISIBLE);
             background.setBackgroundResource(R.drawable.chat_bubble_outgoing_full);
+            RelativeLayout.LayoutParams params2 =
+                    (RelativeLayout.LayoutParams) background.getLayoutParams();
+            params2.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            background.setLayoutParams(params2);
+            background.invalidate();
+
+            RelativeLayout.LayoutParams params =
+                    (RelativeLayout.LayoutParams) timeText.getLayoutParams();
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            timeText.setLayoutParams(params);
+            timeText.invalidate();
+
         } else {
             rightAnchor.setVisibility(View.GONE);
             avatarLayout.setVisibility(View.VISIBLE);

@@ -29,7 +29,6 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 import androidx.core.app.NotificationCompat;
 import com.amptelecom.android.app.LinphoneContext;
 import com.amptelecom.android.app.LinphoneManager;
@@ -39,6 +38,7 @@ import com.amptelecom.android.app.settings.LinphonePreferences;
 import com.amptelecom.android.app.utils.LinphoneUtils;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import java.util.ArrayList;
 import java.util.Random;
 import org.linphone.core.Core;
 import org.linphone.core.tools.Log;
@@ -83,22 +83,27 @@ public class FirebaseMessaging extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        android.util.Log.i("FirebaseMessaging", "[Push Notification] Received");
+        android.util.Log.i("ttt", "[Push Notification] Received" + remoteMessage.toString());
+
+        //        try {
+        //            Toast.makeText(getApplicationContext(), "Push notification received",
+        // Toast.LENGTH_LONG)
+        //                    .show();
+        //        } catch (Exception e) {
+        //        }
+        //        LinphoneUtils.dispatchOnUIThread(mPushReceivedRunnable);
         try {
-            Toast.makeText(getApplicationContext(), "Push notification received", Toast.LENGTH_LONG)
-                    .show();
-        } catch (Exception e) {
-        }
-        LinphoneUtils.dispatchOnUIThread(mPushReceivedRunnable);
-        try {
-            if (remoteMessage.getData().size() > 0) {
-                android.util.Log.i("ttt", "success" + remoteMessage.getData().toString());
-                showNoti(
-                        remoteMessage.getData().get("title"),
-                        remoteMessage.getData().get("message"));
-            } else {
-                android.util.Log.i("ttt", "success" + remoteMessage.getNotification().toString());
-            }
+            //            if (remoteMessage.getData().size() > 0) {
+            //                android.util.Log.i("ttt", "success" +
+            // remoteMessage.getData().toString());
+            //                showNoti(
+            //                        remoteMessage.getData().get("title"),
+            //                        remoteMessage.getData().get("message"));
+            showNoti("Sender Name", "This is message");
+            //            } else {
+            //                android.util.Log.i("ttt", "success" +
+            // remoteMessage.getNotification().toString());
+            //            }
         } catch (Exception e) {
         }
     }
@@ -108,6 +113,9 @@ public class FirebaseMessaging extends FirebaseMessagingService {
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("from", "Notification");
+            intent.putExtra("chatid", "88994b47-cba8-4d42-91b7-83255396aa9d");
+            intent.putExtra("to", "+15129991212");
+            intent.putStringArrayListExtra("cc", new ArrayList<>());
 
             PendingIntent resultPendingIntent =
                     PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);

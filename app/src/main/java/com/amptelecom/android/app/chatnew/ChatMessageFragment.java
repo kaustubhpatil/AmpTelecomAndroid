@@ -134,6 +134,7 @@ public class ChatMessageFragment extends Fragment
             if (getArguments().getStringArrayList("cc") != null) {
                 cc = getArguments().getStringArrayList("cc");
             }
+            android.util.Log.i("ttt", "" + chatid + "+" + to);
             if (getArguments().getString("RemoteSipUri") != null) {
                 mRemoteSipUri = getArguments().getString("RemoteSipUri");
                 mRemoteSipAddress = Factory.instance().createAddress(mRemoteSipUri);
@@ -336,7 +337,6 @@ public class ChatMessageFragment extends Fragment
                         "",
                         "",
                         chatid);
-        android.util.Log.i("ttt", "called" + chatid);
 
         call.enqueue(
                 new Callback<ChatMessagesResponse>() {

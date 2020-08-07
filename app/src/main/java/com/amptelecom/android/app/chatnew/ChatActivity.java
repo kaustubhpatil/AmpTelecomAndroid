@@ -56,6 +56,10 @@ public class ChatActivity extends MainActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getIntent().putExtra("Activity", NAME);
+        if (getIntent().getStringExtra("from") != null
+                && getIntent().getStringExtra("from").equals("Notification")) {
+            onNewIntent(getIntent());
+        }
         super.onCreate(savedInstanceState);
     }
 
@@ -123,12 +127,25 @@ public class ChatActivity extends MainActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
+        handleChat(intent);
+
         // Clean fragments stack upon return
         while (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStackImmediate();
         }
 
         handleIntentExtras(intent);
+    }
+
+    private void handleChat(Intent intent2) {
+
+        if (intent2.getStringExtra("from") != null
+                && intent2.getStringExtra("from").equals("Notification")) {
+            showChatRoom(
+                    intent2.getStringExtra("chatid"),
+                    intent2.getStringExtra("to"),
+                    intent2.getStringArrayListExtra("cc"));
+        }
     }
 
     private void handleIntentExtras(Intent intent) {

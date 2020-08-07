@@ -276,6 +276,25 @@ public abstract class MainActivity extends LinphoneGenericActivity
                         }
                     }
                 };
+        onNewIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent2) {
+        super.onNewIntent(intent2);
+        try {
+            if (intent2.getStringExtra("from") != null
+                    && intent2.getStringExtra("from").equals("Notification")) {
+                Intent intent = new Intent(this, ChatActivity.class);
+                addFlagsToIntent(intent);
+                intent.putExtra("from", intent2.getStringExtra("from"));
+                intent.putExtra("chatid", intent2.getStringExtra("chatid"));
+                intent.putExtra("to", intent2.getStringExtra("to"));
+                intent.putExtra("cc", intent2.getStringArrayListExtra("cc"));
+                startActivity(intent);
+            }
+        } catch (Exception e) {
+        }
     }
 
     @Override

@@ -21,6 +21,8 @@ package com.amptelecom.android.app.call.views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,10 +40,11 @@ import org.linphone.core.ProxyConfig;
 public class CallButton extends ImageView implements OnClickListener, AddressAware {
     private AddressText mAddress;
     private boolean mIsTransfer;
+    public Context context;
 
     public CallButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-
+        this.context = context;
         mIsTransfer = false;
         setOnClickListener(this);
     }
@@ -56,7 +59,12 @@ public class CallButton extends ImageView implements OnClickListener, AddressAwa
 
     public void onClick(View v) {
         if (mAddress.getText().length() > 0) {
-            if (mIsTransfer) {
+            if (mAddress.getText().toString().trim().equals("911")) {
+                context.startActivity(
+                        new Intent(
+                                Intent.ACTION_DIAL,
+                                Uri.parse("tel:" + mAddress.getText().toString().trim())));
+            } else if (mIsTransfer) {
                 Core core = LinphoneManager.getCore();
                 if (core.getCurrentCall() == null) {
                     return;
